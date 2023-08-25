@@ -3,18 +3,19 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import NavigationMenu from './components/navbar/navbar';
+import NavbarMenu from './components/navbar/navbar';
+
 import Home from './components/home/home';
 
 function App() {
   return (
     <div className="App">
 
-      <NavigationMenu />
+      <NavbarMenu />
 
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home />} />
+          {/**<Route path='/' element={<Home />} />*/}
         </Routes>
       </BrowserRouter>
     </div>

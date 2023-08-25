@@ -2,7 +2,8 @@ import React from "react";
 
 function Home() {
     return (
-        <div style={{ backgroundColor: "red" }}>
+        <div className="bg-red-600">
+
             <h1>HOME</h1>
         </div>
     )
