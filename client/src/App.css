@@ -2,6 +2,10 @@ body {
   background-color: #101828 !important;
 }
 
+/*.App {
+  text-align: center;
+}*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

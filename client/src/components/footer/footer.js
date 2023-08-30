@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faCoffee, faX } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faCoffee, faX, faFacebook } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 
-function NavbarMenu() {
+function Footer() {
 
     let Links = [
         { name: "HOME", link: "/" },
@@ -17,7 +17,7 @@ function NavbarMenu() {
 
     return (
         <>
-            <div className='w-full fixed top-0 left-0'>
+            <div className='w-full  bottom-0 left-0'>
                 <div className='md:flex items-center justify-between bg-[#101828] py-4 md:px-10 px-7'>
                     <div>
                         {/* logo section */}
@@ -45,12 +45,20 @@ function NavbarMenu() {
                         </ul>
                         {/* button */}
                     </div>
-                    <div className="ml-20">
-                        <button id="loginButton" className='bg-[#101828] text-white font-semibold px-3 py-1 h-10 w-24 rounded absolute right-16 top-6 cursor-pointer'>Login</button>
+                    <div className=""> {/* linke items */}
+                        <ul className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static bg-[#101828] md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-500 ease-in ${open ? 'top-12' : 'top-[-490px]'}`}>
+                            <li className='md:ml-8 md:my-0 my-7 text-center'>
+                                <a href="#" className='text-[#fff] no-underline hover:text-gray-500 duration-500'><FontAwesomeIcon icon="fa-brands fa-facebook" /></a>
+                                <a href="#" className='text-[#fff] no-underline hover:text-gray-500 duration-500'>link.name</a>
+                                <a href="#" className='text-[#fff] no-underline hover:text-gray-500 duration-500'>link.name</a>
+
+                            </li>
+                        </ul>
+                        {/* button */}
                     </div>
                 </div>
             </div>
         </>
     )
 }
-export default NavbarMenu;
+export default Footer;

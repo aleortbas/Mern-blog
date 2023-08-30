@@ -4,7 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import NavbarMenu from './components/navbar/navbar';
-
+import SubscribeForm from './components/suscribe/suscribeForm';
+import Footer from './components/footer/footer';
 import Home from './components/home/home';
 
 function App() {
@@ -15,9 +16,12 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          {/**<Route path='/' element={<Home />} />*/}
+          <Route path='/' element={<Home />} />
         </Routes>
       </BrowserRouter>
+
+      <SubscribeForm />
+      <Footer />
     </div>
   );
 }
