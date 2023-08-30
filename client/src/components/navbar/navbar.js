@@ -29,7 +29,7 @@ function NavbarMenu() {
                     {/* Menu icon */}
                     <div onClick={() => setOpen(!open)} className='absolute right-0 top-6 cursor-pointer md:hidden w-7 h-7 mr-3'>
                         {
-                            open ? <FontAwesomeIcon size="sm" icon={faX} /> : <FontAwesomeIcon size="lg" icon={faBars} />
+                            open ? <FontAwesomeIcon className="text-white" size="sm" icon={faX} /> : <FontAwesomeIcon className="text-white" size="lg" icon={faBars} />
 
                         }
                     </div>

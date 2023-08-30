@@ -1,3 +1,5 @@
+// TODO - responsive desing md - sm
+
 import React from "react";
 
 function Home() {
@@ -11,13 +13,13 @@ function Home() {
             </div>
             {/** feature blog */}
 
-            <a href="#" id="homeCard" class="flex flex-col items-center bg-[#101828] rounded-xl my-16 md:flex-row ">
-                <div className="px-8 py-8 md:w-5/12">
+            <a href="#" id="homeCard" className="flex flex-col items-center bg-[#101828] rounded-xl no-underline my-16 md:flex-row ">
+                <div className="px-8 py-8 md:w-3/6">
                     <div id="imgCard">
-                        <img class="w-full h-96 md:h-64 rounded-2xl" src="https://wallpapercave.com/wp/wp58250.jpg" alt="" />
+                        <img class="w-full md:h-auto rounded-2xl" src="https://wallpapercave.com/wp/wp58250.jpg" alt="" />
                     </div>
                 </div>
-                <div class="flex flex-col justify-between p-4 leading-normal">
+                <div class="flex flex-col justify-between md:w-3/6 p-4 leading-normal">
                     <div className="py-4">
                         <button id="loginButton" className='bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-24 rounded cursor-pointer'>Login</button>
                     </div>
@@ -26,13 +28,13 @@ function Home() {
                 </div>
             </a>
 
-            <a href="#" id="homeCard" class="flex flex-col items-center bg-[#101828] rounded-xl md:flex-row ">
-                <div className="px-8 py-8 md:w-5/12">
+            <a href="#" id="homeCard" class="flex flex-col items-center bg-[#101828] rounded-xl no-underline md:flex-row ">
+                <div className="px-8 py-8 md:w-3/6">
                     <div id="imgCard">
-                        <img class="w-full h-96 md:h-64 rounded-2xl" src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg" alt="" />
+                        <img class="w-full md:h-auto rounded-2xl" src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg" alt="" />
                     </div>
                 </div>
-                <div class="flex flex-col justify-between p-4 leading-normal">
+                <div class="flex flex-col justify-between md:w-3/6 p-4 leading-normal">
                     <div className="py-4">
                         <button id="loginButton" className='bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-24 rounded cursor-pointer'>Login</button>
                     </div>
@@ -47,12 +49,12 @@ function Home() {
                 <div class="flex-grow h-[0.5px] bg-gray-400"></div>
             </div>
 
-            <div className="grid grid-cols-2 gap-14 pt-16 ">
-                <div>
+            <div className="md:grid md:grid-cols-2 gap-14 pt-16">
+                <div className="mt-7">
                     <div id="homeCard" class="rounded-xl">
                         <div className="px-8 py-8">
                             <div id="imgCard">
-                                <img class="w-auto sm:w-auto h-96 md:h-64 sm:h-40 rounded-2xl" src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg" alt="" />
+                                <img class="w-full md:h-auto rounded-2xl" src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg" alt="" />
                             </div>
                         </div>
                         <div class="px-6 pb-4">
@@ -73,11 +75,11 @@ function Home() {
                         </div>
                     </div>
                 </div>
-                <div>
+                <div className="mt-7">
                     <div id="homeCard" class="rounded-xl">
                         <div className="px-8 py-8">
                             <div id="imgCard">
-                                <img class="w-full h-96 md:h-64 rounded-2xl" src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg" alt="" />
+                                <img class="w-full md:h-auto rounded-2xl" src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg" alt="" />
                             </div>
                         </div>
                         <div class="px-6 pb-4">
@@ -98,11 +100,11 @@ function Home() {
                         </div>
                     </div>
                 </div>
-                <div>
+                <div className="mt-7">
                     <div id="homeCard" class="rounded-xl">
                         <div className="px-8 py-8">
                             <div id="imgCard">
-                                <img class="w-full h-96 md:h-64 rounded-2xl" src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg" alt="" />
+                                <img class="w-full md:h-auto rounded-2xl" src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg" alt="" />
                             </div>
                         </div>
                         <div class="px-6 pb-4">
@@ -123,11 +125,11 @@ function Home() {
                         </div>
                     </div>
                 </div>
-                <div>
+                <div className="mt-7">
                     <div id="homeCard" class="rounded-xl">
                         <div className="px-8 py-8">
                             <div id="imgCard">
-                                <img class="w-full h-96 md:h-64 rounded-2xl" src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg" alt="" />
+                                <img class="w-full md:h-auto rounded-2xl" src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg" alt="" />
                             </div>
                         </div>
                         <div class="px-6 pb-4">
