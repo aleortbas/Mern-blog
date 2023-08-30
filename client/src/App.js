@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import NavbarMenu from './components/navbar/navbar';
 import SubscribeForm from './components/suscribe/suscribeForm';
 import Home from './components/home/home';
+import Blogs from './components/blogs/blogs';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home />} />
+          <Route path='/blogs' element={<Blogs />} />
         </Routes>
       </BrowserRouter>
 

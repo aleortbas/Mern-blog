@@ -7,9 +7,8 @@ function NavbarMenu() {
 
     let Links = [
         { name: "HOME", link: "/" },
-        { name: "SERVICE", link: "/" },
         { name: "ABOUT", link: "/" },
-        { name: "BLOG'S", link: "/" },
+        { name: "BLOG'S", link: "/blogs" },
         { name: "CONTACT", link: "/" },
     ];
 
