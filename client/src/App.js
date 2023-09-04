@@ -7,6 +7,7 @@ import NavbarMenu from './components/navbar/navbar';
 import SubscribeForm from './components/suscribe/suscribeForm';
 import Home from './components/home/home';
 import Blogs from './components/blogs/blogs';
+import About from './components/about/about';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/blogs' element={<Blogs />} />
+          <Route path='/about' element={<About/>} /> 
         </Routes>
       </BrowserRouter>
 
