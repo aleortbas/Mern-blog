@@ -1,10 +1,10 @@
 #loginButton {
-    color: #f9fafb;
-    transition: color .2s;
-    box-shadow: 6px 6px 10px #090e17, -6px -6px 10px #17233b;
+  color: #f9fafb;
+  transition: color 0.2s;
+  box-shadow: 6px 6px 10px #090e17, -6px -6px 10px #17233b;
 }
 
 #loginButton:hover {
-    color: #f9fafb;
-    box-shadow: inset -6px -6px 10px #17233b, inset 6px 6px 10px #090e17;
+  color: #f9fafb;
+  box-shadow: inset -6px -6px 10px #17233b, inset 6px 6px 10px #090e17;
 }
