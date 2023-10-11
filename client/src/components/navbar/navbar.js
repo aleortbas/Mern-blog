@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faCoffee, faX } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
+import Login from "../login/login";
+
 function NavbarMenu() {
   let Links = [
     { name: "HOME", link: "/" },
@@ -11,7 +13,12 @@ function NavbarMenu() {
     { name: "CONTACT", link: "/contact" },
   ];
 
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [login, setLogin] = useState(false);
+
+  const closeLoginModal = () => {
+    setLogin(false);
+  };
 
   return (
     <>
@@ -26,10 +33,10 @@ function NavbarMenu() {
 
           {/* Menu icon */}
           <div
-            onClick={() => setOpen(!open)}
+            onClick={() => setMenuOpen(!menuOpen)}
             className="absolute right-0 top-6 cursor-pointer md:hidden w-7 h-7 mr-3"
           >
-            {open ? (
+            {menuOpen ? (
               <FontAwesomeIcon className="text-white" size="sm" icon={faX} />
             ) : (
               <FontAwesomeIcon className="text-white" size="lg" icon={faBars} />
@@ -41,7 +48,7 @@ function NavbarMenu() {
             {/* linke items */}
             <ul
               className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static bg-[#101828] md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-500 ease-in ${
-                open ? "top-12" : "top-[-490px]"
+                menuOpen ? "top-12" : "top-[-490px]"
               }`}
             >
               {Links.map((link) => (
@@ -61,12 +68,14 @@ function NavbarMenu() {
             <button
               id="loginButton"
               className="bg-[#101828] text-white font-semibold px-3 py-1 h-10 w-24 rounded-[50px] absolute right-16 top-6 cursor-pointer"
+              onClick={() => setLogin(!login)}
             >
               Login
             </button>
           </div>
         </div>
       </div>
+      {login ? <Login onClose={closeLoginModal} /> : null}
     </>
   );
 }

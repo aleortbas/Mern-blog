@@ -13,7 +13,7 @@ function Home() {
       {/** feature blog */}
 
       <a
-        href="#"
+        href="/postBlog"
         id="homeCard"
         className="flex flex-col items-center bg-[#101828] rounded-xl no-underline my-16 md:flex-row "
       >

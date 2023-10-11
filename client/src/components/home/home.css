@@ -11,8 +11,6 @@
 }
 
 #imgCard {
-  transition: color 0.2s;
   padding: 1.5rem;
-  border-radius: 16px;
   box-shadow: inset 4px 4px 8px #090e17, inset -4px -4px 8px #17233b;
 }
