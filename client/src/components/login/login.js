@@ -13,13 +13,21 @@ function Login({ onClose }) {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-screen w-screen backdrop-blur-md ${
-        login ? "block" : "hidden"
+      className={`fixed top-0 left-0 h-screen w-screen backdrop-blur-md visible  ${
+        login ? "" : ""
       }`}
+      id="login"
     >
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white grid grid-cols-2 rounded-md shadow-md">
         <div className="bg-blue-700 flex items-center justify-center">
           <img className="mx-auto w-[450px]" src={signUp} />
+          <div>
+            <ul>
+              <li>Item 1</li>
+              <li>Item 2</li>
+              <li>Item 3</li>
+            </ul>
+          </div>
         </div>
 
         <div className="p-4">
