@@ -1,25 +1,14 @@
-require('dotenv').config();
+const express = require("express");
+const users = require("./routes/blogs");
 
-const express = require("express")
-const mongoose = require("mongoose")
-const mongoString = process.env.DATABASE_URL
+const app = express();
 
-mongoose.connect(mongoString)
-const database = mongoose.connection
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-database.on('error', (error) => {
-    console.log(error)
-})
+app.get("/users", users.getUser);
+app.get("/addUsers", users.createUser);
 
-database.once('connected', () => {
-    console.log('Database connected');
-})
-
-
-const app = express()
-
-app.use(express.json())
-
-app.listen(3000, () => {
-    console.log("Server started at 3000")
-})
+app.listen(5000, () => {
+  console.log("Server started at 5000");
+});
