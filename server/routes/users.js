@@ -1,15 +1,29 @@
 const db = require("../dbConnection");
+const bcrypt = require("bcrypt");
+const salRounds = 10;
+const password = "hola";
 
 const createUser = (req, res) => {
-  db.pool.query(
-    "INSERT INTO users (id_user, first_name, last_name, email, password_hash, username) VALUES (3, '3test', '3test', '3test', '3test', '3test');",
-    (err, result) => {
-      if (err) {
-        throw err;
-      }
-      res.status(301).send(`User added with ID ${result.rows[0]}`);
+  bcrypt.hash(password, salRounds, async (err, hash) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Password hashing error" });
     }
-  );
+    try {
+      const query =
+        "INSERT INTO users (first_name, last_name, email, password_hash, username) VALUES ($1, $2, $3, $4, $5);";
+      const values = ["testId", "testId", "testId", hash, "testId"];
+      db.pool.query(query, values, (err, result) => {
+        if (err) {
+          throw err;
+        }
+        res.status(201).send(`User added with ID ${result.rows[0]}`);
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
 };
 
 const getUser = (req, res) => {
