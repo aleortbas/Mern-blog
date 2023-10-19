@@ -1,9 +1,29 @@
 const db = require("../dbConnection");
 const bcrypt = require("bcrypt");
-const salRounds = 10;
-const password = "hola";
+const bodyParser = require("body-parser");
+const express = require("express");
+const router = express.Router();
 
-const createUser = (req, res) => {
+router.use(bodyParser.json());
+
+const salRounds = 10;
+
+router.route("/signUp").post(async (req, res) => {
+  console.log("Request received for /signUp");
+  const { email, password, firstName, lastName, user } = req.body;
+  console.log(
+    "email: ",
+    email,
+    " password ",
+    password,
+    " first ",
+    firstName,
+    " last ",
+    lastName,
+    " username ",
+    user
+  );
+
   bcrypt.hash(password, salRounds, async (err, hash) => {
     if (err) {
       console.error(err);
@@ -11,8 +31,8 @@ const createUser = (req, res) => {
     }
     try {
       const query =
-        "INSERT INTO users (first_name, last_name, email, password_hash, username) VALUES ($1, $2, $3, $4, $5);";
-      const values = ["testId", "testId", "testId", hash, "testId"];
+        'INSERT INTO users (first_name, last_name, email, password_hash, "user") VALUES ($1, $2, $3, $4, $5);';
+      const values = [email, firstName, lastName, hash, user];
       db.pool.query(query, values, (err, result) => {
         if (err) {
           throw err;
@@ -24,7 +44,7 @@ const createUser = (req, res) => {
       res.status(500).json({ message: "Server error" });
     }
   });
-};
+});
 
 const getUser = (req, res) => {
   db.pool.query("SELECT * FROM users;", (err, result) => {
@@ -35,7 +55,4 @@ const getUser = (req, res) => {
   });
 };
 
-module.exports = {
-  createUser,
-  getUser,
-};
+module.exports = router;

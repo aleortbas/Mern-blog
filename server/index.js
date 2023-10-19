@@ -1,13 +1,20 @@
 const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 const users = require("./routes/users");
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.get("/users", users.getUser);
-app.get("/addUsers", users.createUser);
+app.use("/", users);
 
 app.listen(5000, () => {
   console.log("Server started at 5000");
