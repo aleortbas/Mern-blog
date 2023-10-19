@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import "./components/navbar/navbar.css";
 import "./components/home/home.css";
+import "./components/login/login.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
