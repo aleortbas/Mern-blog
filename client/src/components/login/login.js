@@ -30,19 +30,13 @@ function Login({ onClose }) {
   }
 
   const handleSubmitLogin = async () => {
-    await fetch(`http://localhost:5000/signUp`, {
+    const response = await fetch(`http://localhost:5000/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ firstName, lastName, email, user, password }),
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.text(); // Change to text() to see the response data
-      })
       .then((data) => {
         console.log(data); // Add this line to inspect the response
         // JSON.parse(data);
@@ -50,6 +44,7 @@ function Login({ onClose }) {
       .catch((error) => {
         console.error("Error FETCH:", error);
       });
+    return response.json();
   };
 
   return (
