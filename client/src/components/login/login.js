@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +10,7 @@ function Login({ onClose }) {
 
   const [login, setLogin] = useState(true);
   const [sign, setSignUp] = useState(false);
+  const [submitForm, setSubmitForm] = useState(false);
   const [image, setImage] = useState(true);
 
   const [email, setEmail] = useState(null);
@@ -23,14 +24,21 @@ function Login({ onClose }) {
     onClose(); // Call the onClose callback from props to close the modal in the parent component
   };
 
+  const handleLogin = () => {};
+
+  useEffect(() => {}, [submitForm]);
+
   function toggle() {
     setLogin((login) => !login);
     setSignUp((sign) => !sign);
     setImage((image) => !image);
+    setSubmitForm(true);
   }
 
   const handleSubmitLogin = async () => {
-    const response = await fetch(`http://localhost:5000/login`, {
+    const endpoint = submitForm ? "login" : "signUp";
+    console.log(endpoint);
+    const response = await fetch(`http://localhost:5000/${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +75,7 @@ function Login({ onClose }) {
             </div>
           )}
           {sign && (
-            <form className="p-4">
+            <form className="p-4" onSubmit={handleSubmitLogin}>
               <div>
                 <h1 className="text-center text-gray-600 m-3">Log in</h1>
                 <p className="text-center text-gray-600 m-4">
@@ -99,7 +107,6 @@ function Login({ onClose }) {
               </div>
               <button
                 className="bg-[#101828] text-white font-semibold px-4 py-1 h-12 sm:w-36 w-80 my-3 rounded-[50px] float-left cursor-pointer"
-                onClick={handleSubmitLogin}
                 type="submit"
               >
                 Log in
@@ -119,7 +126,7 @@ function Login({ onClose }) {
           )}
 
           {login && (
-            <form className="p-4">
+            <form className="p-4" onSubmit={handleSubmitLogin}>
               <div>
                 <h1 className="text-center text-gray-600 m-3">Sign up</h1>
                 <p className="text-center text-gray-600 m-4">
@@ -189,10 +196,7 @@ function Login({ onClose }) {
               >
                 Log in
               </button>
-              <button
-                className="bg-[#101828] text-white font-semibold px-4 py-1 h-12 sm:w-36 w-80 my-3 rounded-[50px] float-right cursor-pointer"
-                onClick={handleSubmitLogin}
-              >
+              <button className="bg-[#101828] text-white font-semibold px-4 py-1 h-12 sm:w-36 w-80 my-3 rounded-[50px] float-right cursor-pointer">
                 Sign Up
               </button>
             </form>
