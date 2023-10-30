@@ -11,6 +11,7 @@ import Blogs from "./components/blogs/blogs";
 import About from "./components/about/about";
 import Contact from "./components/contact/contact";
 import PostBlog from "./components/postBlogs/postBlogs";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/Blogs" element={<ProtectedRoute element={Blogs} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/PostBlog" element={<PostBlog />} />

@@ -48,9 +48,9 @@ function Login({ onClose }) {
         },
         body: JSON.stringify({ firstName, lastName, email, user, password }),
       });
-
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         if (data != null) {
           if (endpoint === "login") {
             localStorage.setItem("accessToken", data.token);
@@ -68,16 +68,16 @@ function Login({ onClose }) {
               }
             );
             if (secureRequest != null) {
-              navigate("/blogs");
+              navigate("/");
               handleClose();
             }
           }
         }
       } else {
-        console.error("Error FETCH:", response.status, response.statusText);
+        console.error("Error else:", response.status, response.statusText);
       }
     } catch (error) {
-      console.error("Error FETCH:", error);
+      console.error("Error catch:", error);
     }
   };
 

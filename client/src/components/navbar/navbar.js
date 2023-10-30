@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faCoffee, faX } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCoffee, faL, faX } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 import Login from "../login/login";
@@ -15,6 +15,17 @@ function NavbarMenu() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [login, setLogin] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
+  const token = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (token !== null) {
+      setLoggedIn(false);
+    }
+  }, [token]);
+  if (token != null) {
+    Links.splice(2, 0, { name: "PROFILE", link: "/profile" });
+  }
 
   const closeLoginModal = () => {
     setLogin(false);
@@ -33,7 +44,7 @@ function NavbarMenu() {
 
           {/* Menu icon */}
           <div
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => setMenuOpen(!menuOpen, console.log(menuOpen))}
             className="absolute right-0 top-6 cursor-pointer md:hidden w-7 h-7 mr-3"
           >
             {menuOpen ? (
@@ -65,13 +76,23 @@ function NavbarMenu() {
             {/* button */}
           </div>
           <div className="ml-20">
-            <button
-              id="loginButton"
-              className="bg-[#101828] text-white font-semibold px-3 py-1 h-10 w-24 rounded-[50px] absolute right-16 top-6 cursor-pointer"
-              onClick={() => setLogin(!login)}
-            >
-              Login
-            </button>
+            {loggedIn ? (
+              <button
+                id="loginButton"
+                className="bg-[#101828] text-white font-semibold px-3 py-1 h-10 w-24 rounded-[50px] absolute right-16 top-6 cursor-pointer"
+                onClick={() => setLogin(!login)}
+              >
+                Login
+              </button>
+            ) : (
+              <div className="flex">
+                <img
+                  className="w-12 h-12 rounded-full mr-4"
+                  src="https://marvel-b1-cdn.bc0a.com/f00000000163918/www.care.org/wp-content/uploads/2021/10/Boeing.png"
+                  alt="Avatar of Jonathan Reinink"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
