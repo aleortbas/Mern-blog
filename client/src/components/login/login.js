@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { faL, faX } from "@fortawesome/free-solid-svg-icons";
 import signUp from "./img/sign_up.svg";
 import signIn from "./img/sign_in.svg";
 
@@ -9,6 +10,7 @@ function Login({ onClose }) {
   const [loginForm, setLoginForm] = useState(true);
 
   const [login, setLogin] = useState(true);
+  const [loggedIn, setLoggedIN] = useState(false);
   const [sign, setSignUp] = useState(false);
   const [submitForm, setSubmitForm] = useState(false);
   const [image, setImage] = useState(true);
@@ -19,12 +21,12 @@ function Login({ onClose }) {
   const [lastName, setLastName] = useState(null);
   const [user, setUser] = useState(null);
 
+  const navigate = useNavigate();
+
   const handleClose = () => {
     setLoginForm(false);
     onClose(); // Call the onClose callback from props to close the modal in the parent component
   };
-
-  const handleLogin = () => {};
 
   useEffect(() => {}, [submitForm]);
 
@@ -35,19 +37,21 @@ function Login({ onClose }) {
     setSubmitForm(true);
   }
 
-  const handleSubmitLogin = async () => {
+  const handleSubmitLogin = async (setLoggedIN) => {
     const endpoint = submitForm ? "login" : "signUp";
-    console.log(endpoint);
-    const response = await fetch(`http://localhost:5000/${endpoint}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `http://localhost:5000/${endpoint}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firstName, lastName, email, user, password }),
       },
-      body: JSON.stringify({ firstName, lastName, email, user, password }),
-    })
+      navigate("/blogs")
+    )
       .then((data) => {
-        console.log(data); // Add this line to inspect the response
-        // JSON.parse(data);
+        console.log(data);
       })
       .catch((error) => {
         console.error("Error FETCH:", error);
@@ -75,7 +79,10 @@ function Login({ onClose }) {
             </div>
           )}
           {sign && (
-            <form className="p-4" onSubmit={handleSubmitLogin}>
+            <form
+              className="p-4"
+              onSubmit={() => handleSubmitLogin(setLoggedIN)}
+            >
               <div>
                 <h1 className="text-center text-gray-600 m-3">Log in</h1>
                 <p className="text-center text-gray-600 m-4">
