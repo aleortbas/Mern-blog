@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const authMiddleware = require("../middleware");
 
 require("dotenv").config();
 const router = express.Router();
@@ -28,7 +29,7 @@ router.route("/signUp").post(async (req, res) => {
         if (err) {
           throw err;
         }
-        res.status(201).send(`User added with ID ${result.rows[0]}`);
+        res.status(201).send(`User added with ID`);
       });
     } catch (error) {
       console.error(error);
@@ -54,9 +55,12 @@ router.route("/login").post(async (req, res) => {
             const token = jwt.sign({ user }, process.env.SECRET, {
               expiresIn: "1h",
             });
-            res.status(200).json({ user: userData });
+            res.status(200).json({ user: userData, token: token });
           } else {
             console.log("password incorrect");
+            res
+              .status(401)
+              .json({ message: "Unautharized - Incorrect password" });
           }
         });
       } else {
@@ -66,6 +70,10 @@ router.route("/login").post(async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
+});
+
+router.get("/secureEndpoint", authMiddleware, (req, res) => {
+  res.json({ message: "You have acces to this secure endpoint." });
 });
 
 function generateAccesToken(user) {
