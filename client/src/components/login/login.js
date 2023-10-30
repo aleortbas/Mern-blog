@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faL, faX } from "@fortawesome/free-solid-svg-icons";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 import signUp from "./img/sign_up.svg";
 import signIn from "./img/sign_in.svg";
 
@@ -12,7 +12,7 @@ function Login({ onClose }) {
   const [login, setLogin] = useState(true);
   const [loggedIn, setLoggedIN] = useState(false);
   const [sign, setSignUp] = useState(false);
-  const [submitForm, setSubmitForm] = useState(false);
+  const [submitForm, setSubmitForm] = useState(true);
   const [image, setImage] = useState(true);
 
   const [email, setEmail] = useState(null);
@@ -34,29 +34,51 @@ function Login({ onClose }) {
     setLogin((login) => !login);
     setSignUp((sign) => !sign);
     setImage((image) => !image);
-    setSubmitForm(true);
+    setSubmitForm(!image);
   }
 
-  const handleSubmitLogin = async (setLoggedIN) => {
-    const endpoint = submitForm ? "login" : "signUp";
-    const response = await fetch(
-      `http://localhost:5000/${endpoint}`,
-      {
+  const handleSubmitLogin = async (e) => {
+    e.preventDefault();
+    const endpoint = submitForm ? "signUp" : "login";
+    try {
+      const response = await fetch(`http://localhost:5000/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ firstName, lastName, email, user, password }),
-      },
-      navigate("/blogs")
-    )
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error FETCH:", error);
       });
-    return response.json();
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data != null) {
+          if (endpoint === "login") {
+            localStorage.setItem("accessToken", data.token);
+            //fetch token
+            const accessToken = data.token;
+            const authHeader = `Bearer ${accessToken}`;
+            const secureRequest = await fetch(
+              "http://localhost:5000/secureEndpoint",
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: authHeader, // Include the token in the header
+                },
+              }
+            );
+            if (secureRequest != null) {
+              navigate("/blogs");
+              handleClose();
+            }
+          }
+        }
+      } else {
+        console.error("Error FETCH:", response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error("Error FETCH:", error);
+    }
   };
 
   return (
@@ -75,14 +97,11 @@ function Login({ onClose }) {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white grid grid-cols-2 rounded-md shadow-md">
           {image && (
             <div className="bg-blue-700 flex items-center justify-center">
-              <img className="mx-auto w-[450px]" src={signUp} />
+              <img className="mx-auto w-[450px]" src={signUp} alt="" />
             </div>
           )}
           {sign && (
-            <form
-              className="p-4"
-              onSubmit={() => handleSubmitLogin(setLoggedIN)}
-            >
+            <form className="p-4" onSubmit={handleSubmitLogin}>
               <div>
                 <h1 className="text-center text-gray-600 m-3">Log in</h1>
                 <p className="text-center text-gray-600 m-4">
@@ -128,7 +147,7 @@ function Login({ onClose }) {
           )}
           {!image && (
             <div className="bg-blue-700 flex items-center justify-center">
-              <img className="mx-auto w-[450px]" src={signIn} />
+              <img className="mx-auto w-[450px]" src={signIn} alt="" />
             </div>
           )}
 
