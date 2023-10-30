@@ -29,7 +29,10 @@ router.route("/signUp").post(async (req, res) => {
         if (err) {
           throw err;
         }
-        res.status(201).send(`User added with ID`);
+        const token = jwt.sign({ user }, process.env.SECRET, {
+          expiresIn: "1h",
+        });
+        res.status(201).json({ message: `User added with ID`, token: token });
       });
     } catch (error) {
       console.error(error);
