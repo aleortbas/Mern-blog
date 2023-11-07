@@ -12,5 +12,12 @@
 
 #imgCard {
   padding: 1.5rem;
+  border-radius: 20px;
   box-shadow: inset 4px 4px 8px #090e17, inset -4px -4px 8px #17233b;
+}
+
+#profileCard {
+  color: #f9fafb;
+  transition: color 0.2s;
+  box-shadow: 1px 1px 5px hsl(219, 44%, 6%), -3px -3px 7px #17233b;
 }

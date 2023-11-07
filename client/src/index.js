@@ -8,9 +8,8 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 
-const accessToken = localStorage.removeItem("accessToken");
-console.log("TOKKKKEEEENN0 ", accessToken);
-
+const accessToken = localStorage.getItem("accessToken");
+console.log(accessToken);
 ReactDOM.render(
   <BrowserRouter>
     <App />

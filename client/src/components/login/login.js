@@ -52,7 +52,7 @@ function Login({ onClose }) {
         const data = await response.json();
         console.log(data);
         if (data != null) {
-          if (endpoint === "login") {
+          if (endpoint) {
             localStorage.setItem("accessToken", data.token);
             //fetch token
             const accessToken = data.token;

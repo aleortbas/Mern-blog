@@ -2,7 +2,7 @@ import React from "react";
 
 function Home() {
   return (
-    <div className="container mt-36">
+    <div className="container mt-36 m-auto">
       {/** feature line */}
       <div className="flex items-center py-4">
         <span className="flex-shrink text-2xl text-gray-500 mr-9">
