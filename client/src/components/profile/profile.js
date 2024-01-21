@@ -118,20 +118,6 @@ function Profile() {
           New Post
         </button>
       </div>
-      {
-        <div className="container w-fit m-auto bg-[#0c121f]">
-          <ul className="flex w-auto items-center m-auto">
-            <div className="flex m-auto">
-              <li className="text-white w-44 h-14 flex items-center justify-center border-[1px] border-gray-800">
-                POST
-              </li>
-              <li className="text-white w-44 h-14 flex items-center justify-center border-[1px] border-gray-800">
-                IMAGE
-              </li>
-            </div>
-          </ul>
-        </div>
-      }
     </>
   );
 }

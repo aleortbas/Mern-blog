@@ -3,7 +3,7 @@ import React from "react";
 function About() {
   return (
     <>
-      <div className="container mt-36">
+      <div className="container mt-36 m-auto">
         <div className="text-center">
           <h1 className="text-white">Exploring the Frontiers of Technology</h1>
           <p className="text-gray-600">

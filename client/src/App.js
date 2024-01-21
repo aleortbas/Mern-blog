@@ -10,6 +10,7 @@ import Blogs from "./components/blogs/blogs";
 import About from "./components/about/about";
 import Contact from "./components/contact/contact";
 import PostBlog from "./components/postBlogs/postBlogs";
+import FormBlog from "./components/formBlog/form";
 import Profile from "./components/profile/profile";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -29,6 +30,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/Blogs" element={<ProtectedRoute element={Blogs} />} />
         <Route path="/profile" element={<ProtectedRoute element={Profile} />} />
+        <Route path="/FormBlog" element={<FormBlog />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/PostBlog" element={<PostBlog />} />

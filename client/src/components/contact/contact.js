@@ -3,7 +3,7 @@ import React from "react";
 function Contact() {
   return (
     <>
-      <div className="container mt-36 block">
+      <div className="container mt-36 m-auto block">
         <div className="mb-11">
           <h1 className="text-center text-white m-3">Get in touch</h1>
           <p className="text-center text-gray-600 m-4">
