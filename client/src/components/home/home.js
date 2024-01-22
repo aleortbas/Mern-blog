@@ -57,7 +57,7 @@ function Home() {
                       id="loginButton"
                       className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
                     >
-                      Here goes the categorie
+                      {blog.category_name}
                     </button>
                   </div>
                   <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -104,7 +104,7 @@ function Home() {
                         id="imgCard"
                         className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
                       >
-                        Here goes the categorie
+                        {blog.category_name}
                       </button>
                     </div>
                     <div className="font-bold text-xl mb-2">{blog.title}</div>
@@ -117,10 +117,10 @@ function Home() {
                       />
                       <div className="text-sm">
                         <p className="text-white font-bold m-0 text-lg">
-                          Jonathan Reinink
+                          {blog.user}
                         </p>
                         <p className="text-base text-gray-500">
-                          Aug 18 • 5 min read
+                          {blog.published_date}
                         </p>
                       </div>
                     </div>

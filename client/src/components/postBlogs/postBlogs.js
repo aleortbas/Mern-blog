@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumbs from "../breadcrumb/breadcrumbs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +9,23 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 function PostBlog(params) {
+  const [blogs, setBlogs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/blogsHome`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json()) //extracting JSON data
+      .then((data) => {
+        console.log(data);
+        setBlogs(data.blog);
+      })
+      .catch((error) => console.log(error));
+  }, []);
   return (
     <>
       <div className=" flex justify-center mt-36">
@@ -16,10 +33,15 @@ function PostBlog(params) {
           <div className="flex m-auto justify-between w-2/3">
             <Breadcrumbs />
           </div>
-          <h1 className="text-white m-auto w-2/3">
-            The Future of Desktop Computing: Exploring the Potential of Cloud
-            Gaming
-          </h1>
+          {Array.isArray(blogs) ? (
+            blogs.map((blog) => {
+              return (
+                <h1 className="text-white m-auto w-2/3">{blog.headline}</h1>
+              );
+            })
+          ) : (
+            <h2>nada</h2>
+          )}
 
           <div className="flex mt-5 m-auto justify-between w-2/3">
             <div className="flex">
@@ -29,12 +51,22 @@ function PostBlog(params) {
                 alt="Avatar of Jonathan Reinink"
               />
               <div className="text-sm">
-                <p className="text-white font-bold m-0 text-lg">
-                  Jonathan Reinink
-                </p>
-                <p className="text-base text-gray-500">
-                  11 Jan 2022 • 5 min read
-                </p>
+                {Array.isArray(blogs) ? (
+                  blogs.map((blog) => {
+                    return (
+                      <>
+                        <p className="text-white font-bold m-0 text-lg">
+                          {blog.user}
+                        </p>
+                        <p className="text-base text-gray-500">
+                          {blog.published_date}
+                        </p>
+                      </>
+                    );
+                  })
+                ) : (
+                  <h2>nada</h2>
+                )}
               </div>
             </div>
             <div className="flex items-end">
@@ -93,34 +125,32 @@ function PostBlog(params) {
 
           <div className="mt-24 flex justify-center m-auto w-2/3">
             <div className="text-white">
-              <p className="mb-5">
-                Welcome to our Tech Innovator blog, your go-to destination for
-                exploring the frontiers of technology. Here, we dive deep into
-                the latest advancements, trends, and innovations across various
-                tech domains, keeping you informed and inspired.
-              </p>
-              <img
-                className="w-full md:h-auto rounded-2xl"
-                src="https://wallpapercave.com/wp/wp58250.jpg"
-                alt=""
-              />
-              <p className="mt-5 mb-5">
-                Welcome to our Tech Innovator blog, your go-to destination for
-                exploring the frontiers of technology. Here, we dive deep into
-                the latest advancements, trends, and innovations across various
-                tech domains, keeping you informed and inspired.
-              </p>
-              <img
-                className="w-full md:h-auto rounded-2xl"
-                src="https://wallpapercave.com/wp/wp58250.jpg"
-                alt=""
-              />
-              <p className="mt-5">
-                Welcome to our Tech Innovator blog, your go-to destination for
-                exploring the frontiers of technology. Here, we dive deep into
-                the latest advancements, trends, and innovations across various
-                tech domains, keeping you informed and inspired.
-              </p>
+              {Array.isArray(blogs) ? (
+                blogs.map((blog) => {
+                  // Split the blog body text into paragraphs based on line breaks
+                  const paragraphs = blog.body.split("\n\n");
+
+                  // Map over the paragraphs and return a <p> element for each
+                  return (
+                    <div key={blog.id}>
+                      {paragraphs.map((paragraph, index) => (
+                        <>
+                          <p className="mb-5" key={index}>
+                            {paragraph}
+                          </p>
+                          <img
+                            className="w-full md:h-auto mb-5 rounded-2xl"
+                            src="https://wallpapercave.com/wp/wp58250.jpg"
+                            alt=""
+                          />
+                        </>
+                      ))}
+                    </div>
+                  );
+                })
+              ) : (
+                <h2>nada</h2>
+              )}
             </div>
           </div>
           <div className="mt-24 flex justify-center m-auto w-2/3">
