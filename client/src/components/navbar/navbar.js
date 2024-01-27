@@ -58,7 +58,7 @@ function NavbarMenu() {
             {" "}
             {/* linke items */}
             <ul
-              className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static bg-[#101828] md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-500 ease-in ${
+              className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static bg-[#101828] md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-700 ease-in ${
                 menuOpen ? "top-12" : "top-[-490px]"
               }`}
             >
