@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faX } from "@fortawesome/free-solid-svg-icons";
 
-function Profile() {
-  const [isShowBlogForm, setBlogForm] = useState(false);
+function Profile({ onClose }) {
+  const [isShowBlogForm, setBlogForm] = useState(true);
 
   const handleClick = () => {
     setBlogForm(false);
   };
+
+  const handleClose = () => {
+    setBlogForm(false);
+    onClose();
+  };
+
   return (
     <>
       <div className="container mt-36 w-fit m-auto" id="profile">
@@ -125,21 +131,41 @@ function Profile() {
           New Post
         </button>
       </div>
-      <div>{isShowBlogForm && <Box />}</div>
+      <div>{isShowBlogForm && <Box onClose={() => handleClose(false)} />}</div>
     </>
   );
 }
 
-function Box() {
-  const [isShowBlogForm, setBlogForm] = useState(false);
+function Box({ onClose }) {
+  const [isShowBlogForm, setBlogForm] = useState(true);
+  const inputImage = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const textareaRows = selectedImage ? 10 : 22; // CONDICIONAL
 
-  const handleClick = () => {
+  const handleClick2 = () => {
+    // 👇️ open file input box on click of another element
+    inputImage.current.click();
+  };
+
+  const handleImage = (event) => {
+    const fileObj = event.target.files && event.target.files[0];
+    setSelectedImage(URL.createObjectURL(fileObj));
+    if (!fileObj) {
+      return;
+    }
+    event.target.value = null;
+    console.log(fileObj);
+    console.log(fileObj.name);
+  };
+
+  const handleClose = () => {
     setBlogForm(false);
+    onClose();
   };
 
   return (
     <div className="fixed top-0 left-0 h-screen w-screen backdrop-blur-sm flex items-center justify-center">
-      <div className="w-[800px] h-[650px] bg-white rounded-xl">
+      <div className="w-[800px] h-[750px] bg-white rounded-xl">
         <div className="flex p-4">
           <img
             className="w-16 h-16 rounded-full mr-4"
@@ -151,24 +177,40 @@ function Box() {
             <p className="text-base text-gray-500">blog.published_date</p>
           </div>
           <div className="ml-auto">
-            <button onClick={() => setBlogForm(!isShowBlogForm)}>
+            <button onClick={handleClose}>
               <FontAwesomeIcon className="text-black" size="xl" icon={faX} />
             </button>
           </div>
         </div>
 
-        <div className="flex justify-center p-4">
+        <div className="justify-center p-4">
           <textarea
-            rows="18"
+            rows={textareaRows}
             className="bg-transparent w-full outline-none text-black resize-none"
             type="text"
             placeholder="Type your message..."
             name="feedback"
             required
           ></textarea>
+          {selectedImage && (
+            <img
+              src={selectedImage}
+              alt="Selected"
+              className="w-full max-h-[300px]"
+            />
+          )}
         </div>
         <div className="justify-start p-4 border-t">
-          <button className="bg-[#101828] text-white text-center font-semibold  h-11  w-11 mr-2 rounded-full  cursor-pointer">
+          <input
+            className="absolute inset-0 opacity-0 cursor-pointer"
+            ref={inputImage}
+            type="file"
+            onChange={handleImage}
+          />
+          <button
+            className="bg-[#101828] text-white text-center font-semibold h-11 w-11 mr-2 rounded-full cursor-pointer"
+            onClick={() => inputImage.current.click()} // Trigger click on input element when button is clicked
+          >
             <FontAwesomeIcon className="text-white" size="sm" icon={faImage} />
           </button>
           <button className="bg-[#101828] text-white text-center font-semibold  h-11  w-32 mr-2 rounded-full  cursor-pointer">
