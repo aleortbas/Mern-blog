@@ -10,7 +10,10 @@ import reportWebVitals from "./reportWebVitals";
 
 //const accessToken = localStorage.removeItem("accessToken");
 const accessToken = localStorage.getItem("accessToken");
+const user_id = localStorage.getItem("userId");
 console.log("TOKEN: ", accessToken);
+console.log("USER_ID: ", user_id);
+
 ReactDOM.render(
   <BrowserRouter>
     <App />

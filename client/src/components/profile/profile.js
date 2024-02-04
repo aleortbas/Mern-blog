@@ -2,8 +2,8 @@ import React, { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faX } from "@fortawesome/free-solid-svg-icons";
 
-function Profile({ onClose }) {
-  const [isShowBlogForm, setBlogForm] = useState(true);
+function Profile() {
+  const [isShowBlogForm, setBlogForm] = useState(false);
 
   const handleClick = () => {
     setBlogForm(false);
@@ -11,7 +11,6 @@ function Profile({ onClose }) {
 
   const handleClose = () => {
     setBlogForm(false);
-    onClose();
   };
 
   return (
@@ -131,7 +130,7 @@ function Profile({ onClose }) {
           New Post
         </button>
       </div>
-      <div>{isShowBlogForm && <Box onClose={() => handleClose(false)} />}</div>
+      <div>{isShowBlogForm && <Box onClose={() => handleClose(true)} />}</div>
     </>
   );
 }
@@ -140,12 +139,16 @@ function Box({ onClose }) {
   const [isShowBlogForm, setBlogForm] = useState(true);
   const inputImage = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const textareaRows = selectedImage ? 10 : 22; // CONDICIONAL
+  const [user, setUSer] = useState(null);
+  const [title, setTitle] = useState(null);
+  const [headline, setHeadline] = useState(null);
+  const [body, setBody] = useState(null);
 
-  const handleClick2 = () => {
-    // 👇️ open file input box on click of another element
-    inputImage.current.click();
-  };
+  const user_id = localStorage.getItem("userId");
+  const titleT = "title";
+  const headlineT = "headline";
+
+  const textareaRows = selectedImage ? 10 : 22; // CONDICIONAL
 
   const handleImage = (event) => {
     const fileObj = event.target.files && event.target.files[0];
@@ -163,6 +166,27 @@ function Box({ onClose }) {
     onClose();
   };
 
+  const handleSubmitPostBlog = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:5000/postBlog`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id, titleT, headlineT, body }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+      } else {
+        console.error("Error else:", response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error("Error catch:", error);
+    }
+  };
+
   return (
     <div className="fixed top-0 left-0 h-screen w-screen backdrop-blur-sm flex items-center justify-center">
       <div className="w-[800px] h-[750px] bg-white rounded-xl">
@@ -173,7 +197,7 @@ function Box({ onClose }) {
             alt="Avatar of Jonathan Reinink"
           />
           <div className="text-sm">
-            <p className="text-white font-bold m-0 text-lg">blog.user</p>
+            <p className="text-gray-500 font-bold m-0 text-lg">blog.user</p>
             <p className="text-base text-gray-500">blog.published_date</p>
           </div>
           <div className="ml-auto">
@@ -184,38 +208,46 @@ function Box({ onClose }) {
         </div>
 
         <div className="justify-center p-4">
-          <textarea
-            rows={textareaRows}
-            className="bg-transparent w-full outline-none text-black resize-none"
-            type="text"
-            placeholder="Type your message..."
-            name="feedback"
-            required
-          ></textarea>
-          {selectedImage && (
-            <img
-              src={selectedImage}
-              alt="Selected"
-              className="w-full max-h-[300px]"
-            />
-          )}
-        </div>
-        <div className="justify-start p-4 border-t">
-          <input
-            className="absolute inset-0 opacity-0 cursor-pointer"
-            ref={inputImage}
-            type="file"
-            onChange={handleImage}
-          />
-          <button
-            className="bg-[#101828] text-white text-center font-semibold h-11 w-11 mr-2 rounded-full cursor-pointer"
-            onClick={() => inputImage.current.click()} // Trigger click on input element when button is clicked
-          >
-            <FontAwesomeIcon className="text-white" size="sm" icon={faImage} />
-          </button>
-          <button className="bg-[#101828] text-white text-center font-semibold  h-11  w-32 mr-2 rounded-full  cursor-pointer">
-            Publicar
-          </button>
+          <form onSubmit={handleSubmitPostBlog}>
+            <textarea
+              rows={textareaRows}
+              className="bg-transparent w-full outline-none text-black resize-none"
+              type="text"
+              placeholder="Type your message..."
+              name="feedback"
+              onChange={(e) => setBody(e.target.value)}
+              required
+            ></textarea>
+            {selectedImage && (
+              <img
+                src={selectedImage}
+                alt="Selected"
+                className="w-full max-h-[300px]"
+              />
+            )}
+            <div className="justify-start p-4 border-t">
+              <input
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                ref={inputImage}
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={handleImage}
+              />
+              <button
+                className="bg-[#101828] text-white text-center font-semibold h-11 w-11 mr-2 rounded-full cursor-pointer"
+                onClick={() => inputImage.current.click()} // Trigger click on input element when button is clicked
+              >
+                <FontAwesomeIcon
+                  className="text-white"
+                  size="sm"
+                  icon={faImage}
+                />
+              </button>
+              <button className="bg-[#101828] text-white text-center font-semibold  h-11  w-32 mr-2 rounded-full  cursor-pointer">
+                Publicar
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

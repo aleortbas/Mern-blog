@@ -50,10 +50,11 @@ function Login({ onClose }) {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        //console.log("Data received:", data.id_user);
         if (data != null) {
           if (endpoint) {
             localStorage.setItem("accessToken", data.token);
+            localStorage.setItem("userId", data.id_user);
             //fetch token
             const accessToken = data.token;
             const authHeader = `Bearer ${accessToken}`;
