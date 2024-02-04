@@ -52,13 +52,19 @@ router.route("/login").post(async (req, res) => {
       }
       if (result.rows.length === 1) {
         const userData = result.rows[0];
+        const userId = userData.id_user;
+        console.log("Query result:", result.rows);
         const passwordHash = userData.password_hash;
         bcrypt.compare(password, passwordHash, (err, result) => {
           if (result) {
             const token = jwt.sign({ user }, process.env.SECRET, {
               expiresIn: "1h",
             });
-            res.status(200).json({ user: userData, token: token });
+            res.status(200).json({
+              id_user: userId,
+              user: userData,
+              token: token,
+            });
           } else {
             console.log("password incorrect");
             res

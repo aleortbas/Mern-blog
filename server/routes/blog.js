@@ -24,4 +24,22 @@ router.route("/blogsHome").get(async (req, res) => {
   }
 });
 
+router.route("/postBlog").post((req, res) => {
+  const { user_id, titleT, headlineT, body } = req.body;
+  console.log("USER", user_id);
+  try {
+    const query =
+      "INSERT INTO post (user_id, title, headline, published_date, body, category_id) VALUES ($1, $2, $3,NOW(), $4, 1)";
+    const values = [user_id, titleT, headlineT, body];
+    db.pool.query(query, values, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      res.status(200).json({ message: "Blog added" });
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
 module.exports = router;
