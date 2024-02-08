@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage, faX } from "@fortawesome/free-solid-svg-icons";
+import { faImage, faX, faPaperclip } from "@fortawesome/free-solid-svg-icons";
 
 function Profile() {
   const [isShowBlogForm, setBlogForm] = useState(false);
@@ -144,13 +144,15 @@ function Box({ onClose }) {
   const [headline, setHeadline] = useState(null);
   const [body, setBody] = useState(null);
 
+  const [files, setFiles] = useState([]);
+
   const user_id = localStorage.getItem("userId");
   const titleT = "title";
   const headlineT = "headline";
 
-  const textareaRows = selectedImage ? 10 : 22; // CONDICIONAL
+  //const textareaRows = selectedImage ? 10 : 22; // CONDICIONAL
 
-  const handleImage = (event) => {
+  /* const handleImage = (event) => {
     const fileObj = event.target.files && event.target.files[0];
     setSelectedImage(URL.createObjectURL(fileObj));
     if (!fileObj) {
@@ -158,8 +160,36 @@ function Box({ onClose }) {
     }
     event.target.value = null;
     console.log(fileObj);
-    console.log(fileObj.name);
+  }; */
+
+  const packFiles = (files) => {
+    const data = new FormData();
+    [...files].forEach((file, i) => {
+      data.append(`file-${i}`, file, file.name);
+    });
   };
+
+  /*  const handleUploadClick = () => {
+    if (files.length) {
+      const data = packFiles(files);
+      uploadFiles(data);
+    }
+  }; */
+
+  const renderFileList = () => (
+    <div className="flex">
+      {[...files].slice(0, 3).map((f, i) => {
+        console.log(f);
+        const image = URL.createObjectURL(f);
+        return (
+          <l className="text-black" key={i}>
+            {f.name} - {f.type}
+            <img src={image} />
+          </l>
+        );
+      })}
+    </div>
+  );
 
   const handleClose = () => {
     setBlogForm(false);
@@ -210,7 +240,8 @@ function Box({ onClose }) {
         <div className="justify-center p-4">
           <form onSubmit={handleSubmitPostBlog}>
             <textarea
-              rows={textareaRows}
+              //rows={textareaRows}
+              rows="10"
               className="bg-transparent w-full outline-none text-black resize-none"
               type="text"
               placeholder="Type your message..."
@@ -218,21 +249,16 @@ function Box({ onClose }) {
               onChange={(e) => setBody(e.target.value)}
               required
             ></textarea>
-            {selectedImage && (
-              <img
-                src={selectedImage}
-                alt="Selected"
-                className="w-full max-h-[300px]"
-              />
-            )}
             <div className="justify-start p-4 border-t">
               <input
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 ref={inputImage}
                 type="file"
                 accept="image/png, image/jpeg"
-                onChange={handleImage}
+                onChange={(e) => setFiles(e.target.files)}
+                multiple
               />
+              {renderFileList()}
               <button
                 className="bg-[#101828] text-white text-center font-semibold h-11 w-11 mr-2 rounded-full cursor-pointer"
                 onClick={() => inputImage.current.click()} // Trigger click on input element when button is clicked
