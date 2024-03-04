@@ -150,17 +150,11 @@ function Box({ onClose }) {
   const titleT = "title";
   const headlineT = "headline";
 
-  //const textareaRows = selectedImage ? 10 : 22; // CONDICIONAL
+  var originalname = "";
+  var size = "";
+  var file;
 
-  /* const handleImage = (event) => {
-    const fileObj = event.target.files && event.target.files[0];
-    setSelectedImage(URL.createObjectURL(fileObj));
-    if (!fileObj) {
-      return;
-    }
-    event.target.value = null;
-    console.log(fileObj);
-  }; */
+  const textareaRows = 10; // CONDICIONAL
 
   const packFiles = (files) => {
     const data = new FormData();
@@ -179,7 +173,7 @@ function Box({ onClose }) {
   const renderFileList = () => (
     <div className="flex">
       {[...files].slice(0, 3).map((f, i) => {
-        console.log(f);
+        file = f;
         const image = URL.createObjectURL(f);
         return (
           <l className="text-black" key={i}>
@@ -198,17 +192,22 @@ function Box({ onClose }) {
 
   const handleSubmitPostBlog = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("user_id", user_id);
+    formData.append("titleT", titleT);
+    formData.append("headlineT", headlineT);
+    formData.append("body", body);
     try {
-      const response = await fetch(`http://localhost:5000/postBlog`, {
+      const response = await fetch(`http://localhost:5000/uploadImage`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user_id, titleT, headlineT, body }),
+        body: formData,
       });
       if (response.ok) {
         const data = await response.json();
         console.log(data);
+        alert("Blog posted");
+        handleClose();
       } else {
         console.error("Error else:", response.status, response.statusText);
       }
@@ -219,7 +218,7 @@ function Box({ onClose }) {
 
   return (
     <div className="fixed top-0 left-0 h-screen w-screen backdrop-blur-sm flex items-center justify-center">
-      <div className="w-[800px] h-[750px] bg-white rounded-xl">
+      <div className="w-[800px] h-auto bg-white rounded-xl">
         <div className="flex p-4">
           <img
             className="w-16 h-16 rounded-full mr-4"
@@ -269,7 +268,7 @@ function Box({ onClose }) {
                   icon={faImage}
                 />
               </button>
-              <button className="bg-[#101828] text-white text-center font-semibold  h-11  w-32 mr-2 rounded-full  cursor-pointer">
+              <button className="bg-[#101828] text-white text-center font-semibold  h-11  w-32 mr-2 mt-4 rounded-full  cursor-pointer">
                 Publicar
               </button>
             </div>
