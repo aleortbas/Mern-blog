@@ -4,6 +4,7 @@ const authMiddleware = require("../middleware");
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
+const { log } = require("console");
 
 require("dotenv").config();
 const router = express.Router();
@@ -37,37 +38,23 @@ router.route("/blogsHome").get(async (req, res) => {
   }
 });
 
-router.route("/postBlog").post((req, res) => {
-  const { user_id, titleT, headlineT, body } = req.body;
-  try {
-    const query =
-      "INSERT INTO post (user_id, title, headline, published_date, body, category_id) VALUES ($1, $2, $3,NOW(), $4, 1)";
-    const values = [user_id, titleT, headlineT, body];
-    db.pool.query(query, values, (err, result) => {
-      if (err) {
-        throw err;
-      }
-      res.status(200).json({ message: "Blog added" });
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Server Error" });
-  }
-});
-
 router.post("/uploadImage", upload.single("file"), (req, res, next) => {
   const { originalname, size, path } = req.file;
-  console.log(path);
+  const { user_id, titleT, headlineT, body } = req.body;
 
+  console.log(user_id);
   try {
-    const query =
+    const queryImage =
       "INSERT INTO public.images(id_image, id_blog, filename, file_size, file_path) VALUES (2, 20, $1, $2, $3);";
-    const values = [originalname, size, path];
-    db.pool.query(query, values, (err, result) => {
-      if (err) {
-        throw err;
-      }
-      res.status(200).json({ message: "image data added" });
-    });
+    const valuesImage = [originalname, size, path];
+    db.pool.query(queryImage, valuesImage);
+
+    const queryBlog =
+      "INSERT INTO post (user_id, title, headline, published_date, body, category_id) VALUES ($1, $2, $3,NOW(), $4, 1)";
+    const values = [user_id, titleT, headlineT, body];
+    db.pool.query(queryBlog, values);
+
+    res.status(200).json({ message: "image data added" });
   } catch (error) {
     res.status(500).json({ message: "server error" });
   }
