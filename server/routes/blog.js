@@ -38,6 +38,25 @@ router.route("/blogsHome").get(async (req, res) => {
   }
 });
 
+router.route("/readBlog").get(async (req, res) => {
+  const id_post = req.query.id_post;
+  console.log(id_post);
+  try {
+    const query =
+      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b INNER JOIN post_categories as pc ON pc.id_category = b.category_id INNER JOIN users as u ON u.id_user = b.user_id WHERE b.id_post = $1";
+    db.pool.query(query, [id_post], (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Error querying the database" });
+      }
+      if (result.rows.length === 1) {
+      }
+      res.status(200).json({ blog: result.rows });
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 router.post("/uploadImage", upload.single("file"), (req, res, next) => {
   const { originalname, size, path } = req.file;
   const { user_id, titleT, headlineT, body } = req.body;
@@ -65,7 +84,7 @@ router.post("/uploadImage", upload.single("file"), (req, res, next) => {
           if (error) {
             console.error("Error occurred Image: ", error);
           } else {
-            console.log("POst and Image inserted succesfully");
+            console.log("Post and Image inserted succesfully");
           }
         });
       }
