@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import NavbarMenu from "../pagination/pagination";
-import Pagination from "../pagination/pagination";
 
 function Blogs(params) {
   const [blogs, setBlogs] = useState([]);

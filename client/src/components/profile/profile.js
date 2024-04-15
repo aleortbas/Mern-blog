@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faX, faPaperclip } from "@fortawesome/free-solid-svg-icons";
+import { useUserId } from "../../User.Context";
 
 function Profile() {
   const [isShowBlogForm, setBlogForm] = useState(false);
@@ -138,20 +139,16 @@ function Profile() {
 function Box({ onClose }) {
   const [isShowBlogForm, setBlogForm] = useState(true);
   const inputImage = useRef(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [user, setUSer] = useState(null);
-  const [title, setTitle] = useState(null);
-  const [headline, setHeadline] = useState(null);
   const [body, setBody] = useState(null);
 
   const [files, setFiles] = useState([]);
 
-  const user_id = localStorage.getItem("userId");
+  /*  const user_id = localStorage.getItem("userId"); */
+  const user_id = parseInt(useUserId());
+
   const titleT = "title";
   const headlineT = "headline";
 
-  var originalname = "";
-  var size = "";
   var file;
 
   const textareaRows = 10; // CONDICIONAL
@@ -162,13 +159,6 @@ function Box({ onClose }) {
       data.append(`file-${i}`, file, file.name);
     });
   };
-
-  /*  const handleUploadClick = () => {
-    if (files.length) {
-      const data = packFiles(files);
-      uploadFiles(data);
-    }
-  }; */
 
   const renderFileList = () => (
     <div className="flex">

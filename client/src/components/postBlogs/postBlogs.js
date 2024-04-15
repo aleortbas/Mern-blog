@@ -8,12 +8,17 @@ import {
   faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
 
-function PostBlog(params) {
+function PostBlog(props) {
   const [blogs, setBlogs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [idPost, setIdPost] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/blogsHome`, {
+    const url = window.location.href;
+    const idPostIndex = url.lastIndexOf("/") + 1;
+    const idPostValue = url.substring(idPostIndex);
+    setIdPost(idPostValue);
+
+    fetch(`http://localhost:5000/readBlog?id_post=${idPostValue}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

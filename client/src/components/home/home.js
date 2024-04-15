@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Blogs from "../blogs/blogs";
 
 function Home() {
   const [blogs, setBlogs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [pruebas, setPruebas] = useState(10);
 
   useEffect(() => {
     fetch(`http://localhost:5000/blogsHome`, {
@@ -20,6 +18,10 @@ function Home() {
       })
       .catch((error) => console.log(error));
   }, []);
+
+  function handleClick() {
+    setPruebas(pruebas + 10);
+  }
 
   return (
     <div className="container mt-36 m-auto">
@@ -37,37 +39,39 @@ function Home() {
         {Array.isArray(blogs) ? (
           blogs.map((blog) => {
             return (
-              <a
-                href="/postBlog"
-                id="homeCard"
-                className="flex flex-col items-center bg-[#101828] rounded-xl no-underline my-16 md:flex-row "
-              >
-                <div className="px-8 py-8 md:w-3/6">
-                  <div id="imgCard">
-                    <img
-                      className="w-full md:h-auto rounded-2xl"
-                      src="https://wallpapercave.com/wp/wp58250.jpg"
-                      alt=""
-                    />
+              <>
+                <a
+                  href={`/postBlog/${blog.id_post}`}
+                  id="homeCard"
+                  className="flex flex-col items-center bg-[#101828] rounded-xl no-underline my-16 md:flex-row "
+                >
+                  <div className="px-8 py-8 md:w-3/6">
+                    <div id="imgCard">
+                      <img
+                        className="w-full md:h-auto rounded-2xl"
+                        src="https://wallpapercave.com/wp/wp58250.jpg"
+                        alt=""
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col justify-between md:w-3/6 p-4 leading-normal">
-                  <div className="py-4">
-                    <button
-                      id="loginButton"
-                      className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
-                    >
-                      {blog.category_name}
-                    </button>
+                  <div className="flex flex-col justify-between md:w-3/6 p-4 leading-normal">
+                    <div className="py-4">
+                      <button
+                        id="loginButton"
+                        className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
+                      >
+                        {blog.category_name}
+                      </button>
+                    </div>
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                      {blog.title}
+                    </h5>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                      {blog.headline}
+                    </p>
                   </div>
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    {blog.title}
-                  </h5>
-                  <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    {blog.headline}
-                  </p>
-                </div>
-              </a>
+                </a>
+              </>
             );
           })
         ) : (

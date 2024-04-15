@@ -14,6 +14,8 @@ import FormBlog from "./components/formBlog/form";
 import Profile from "./components/profile/profile";
 import ProtectedRoute from "./ProtectedRoute";
 
+import { UserProvider } from "./User.Context";
+
 function App() {
   const navigate = useNavigate();
 
@@ -24,17 +26,22 @@ function App() {
 
   return (
     <div className="App">
-      <NavbarMenu />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/Blogs" element={<ProtectedRoute element={Blogs} />} />
-        <Route path="/profile" element={<ProtectedRoute element={Profile} />} />
-        <Route path="/FormBlog" element={<FormBlog />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/PostBlog" element={<PostBlog />} />
-      </Routes>
+      <UserProvider>
+        <NavbarMenu />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/Blogs" element={<ProtectedRoute element={Blogs} />} />
+          <Route
+            path="/profile"
+            element={<ProtectedRoute element={Profile} />}
+          />
+          <Route path="/FormBlog" element={<FormBlog />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/PostBlog/:id_post" element={<PostBlog />} />
+        </Routes>
+      </UserProvider>
 
       {shouldRender() && <SubscribeForm />}
     </div>
