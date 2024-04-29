@@ -38,6 +38,24 @@ router.route("/blogsHome").get(async (req, res) => {
   }
 });
 
+router.route("/blogsHomeDate").get(async (req, res) => {
+  try {
+    const query =
+      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b INNER JOIN post_categories as pc ON pc.id_category = b.category_id INNER JOIN users as u ON u.id_user = b.user_id ORDER BY b.published_date DESC";
+    db.pool.query(query, (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Error querying the database" });
+      }
+      if (result.rows.length === 1) {
+        const title = result.rows[2];
+      }
+      res.status(200).json({ blog: result.rows });
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error " });
+  }
+});
+
 router.route("/readBlog").get(async (req, res) => {
   const id_post = req.query.id_post;
   console.log(id_post);
@@ -49,6 +67,26 @@ router.route("/readBlog").get(async (req, res) => {
         return res.status(500).json({ message: "Error querying the database" });
       }
       if (result.rows.length === 1) {
+      }
+      res.status(200).json({ blog: result.rows });
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.route("/profileData").get(async (req, res) => {
+  const { user_id } = req.body;
+  console.log(user_id);
+  try {
+    const query =
+      "SELECT p.title, p.headline, u.first_name || ' ' || u.last_name as username, u.file_path FROM post p INNER JOIN users u ON (u.id_user = p.user_id) WHERE u.id_user = '124'";
+    db.pool.query(query, (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Error querying the database" });
+      }
+      if (result.rows.length === 1) {
+        const title = result.rows[2];
       }
       res.status(200).json({ blog: result.rows });
     });

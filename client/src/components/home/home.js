@@ -1,8 +1,23 @@
 import React, { useEffect, useState } from "react";
 
 function Home() {
-  const [blogs, setBlogs] = useState([]);
+  const [blogsByDate, setBlogsByDate] = useState([]);
+  const [blogsByPopularity, setBlogsByPopularity] = useState([]);
   const [pruebas, setPruebas] = useState(10);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/blogsHomeDate`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json()) //extracting JSON data
+      .then((data) => {
+        setBlogsByDate(data.blog);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   useEffect(() => {
     fetch(`http://localhost:5000/blogsHome`, {
@@ -13,11 +28,16 @@ function Home() {
     })
       .then((response) => response.json()) //extracting JSON data
       .then((data) => {
-        console.log(data);
-        setBlogs(data.blog);
+        setBlogsByPopularity(data.blog);
       })
       .catch((error) => console.log(error));
   }, []);
+
+  console.log(blogsByDate);
+
+  const randomStartBlogs = Math.floor(Math.random() * 10);
+  const randomEndBlogs = Math.floor(Math.random() * 10);
+  const featureBlogs = blogsByDate.slice(0, 6);
 
   function handleClick() {
     setPruebas(pruebas + 10);
@@ -36,12 +56,12 @@ function Home() {
       {/** feature blog */}
 
       <div>
-        {Array.isArray(blogs) ? (
-          blogs.map((blog) => {
+        {Array.isArray(blogsByDate) ? (
+          featureBlogs.map((blogsByDate) => {
             return (
               <>
                 <a
-                  href={`/postBlog/${blog.id_post}`}
+                  href={`/postBlog/${blogsByDate.id_post}`}
                   id="homeCard"
                   className="flex flex-col items-center bg-[#101828] rounded-xl no-underline my-16 md:flex-row "
                 >
@@ -60,14 +80,14 @@ function Home() {
                         id="loginButton"
                         className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
                       >
-                        {blog.category_name}
+                        {blogsByDate.category_name}
                       </button>
                     </div>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                      {blog.title}
+                      {blogsByDate.title}
                     </h5>
                     <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                      {blog.headline}
+                      {blogsByDate.headline}
                     </p>
                   </div>
                 </a>
@@ -88,8 +108,8 @@ function Home() {
       </div>
 
       <div className="md:grid md:grid-cols-2 gap-14 pt-16">
-        {Array.isArray(blogs) ? (
-          blogs.map((blog) => {
+        {Array.isArray(blogsByPopularity) ? (
+          featureBlogs.map((blogsByPopularity) => {
             return (
               <div className="mt-7">
                 <div id="homeCard" className="rounded-xl">
@@ -108,11 +128,15 @@ function Home() {
                         id="imgCard"
                         className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
                       >
-                        {blog.category_name}
+                        {blogsByPopularity.category_name}
                       </button>
                     </div>
-                    <div className="font-bold text-xl mb-2">{blog.title}</div>
-                    <p className="text-gray-700 text-base">{blog.headline}</p>
+                    <div className="font-bold text-xl mb-2">
+                      {blogsByPopularity.title}
+                    </div>
+                    <p className="text-gray-700 text-base">
+                      {blogsByPopularity.headline}
+                    </p>
                     <div className="flex mt-11">
                       <img
                         className="w-16 h-16 rounded-full mr-4"
@@ -121,10 +145,10 @@ function Home() {
                       />
                       <div className="text-sm">
                         <p className="text-white font-bold m-0 text-lg">
-                          {blog.user}
+                          {blogsByPopularity.user}
                         </p>
                         <p className="text-base text-gray-500">
-                          {blog.published_date}
+                          {blogsByPopularity.published_date}
                         </p>
                       </div>
                     </div>
