@@ -1,10 +1,29 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faX, faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { useUserId } from "../../User.Context";
 
 function Profile() {
   const [isShowBlogForm, setBlogForm] = useState(false);
+  const [userData, setUserData] = useState([]);
+  const [files, setFiles] = useState([]);
+
+  var file;
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/profileData`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "appplication/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUserData(data.blog);
+        console.log("userblog", userData);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   const handleClick = () => {
     setBlogForm(false);
@@ -13,6 +32,11 @@ function Profile() {
   const handleClose = () => {
     setBlogForm(false);
   };
+
+  const featureBlogs = userData.slice(0, 6);
+  const userPhoto = userData.slice(0, 1);
+  const imagen = userPhoto;
+  console.log("IMAGE", imagen[0]);
 
   return (
     <>
@@ -23,21 +47,31 @@ function Profile() {
           className="flex flex-colbg-[#101828]  no-underline md:flex-row"
         >
           <div className="px-8 py-8 md:w-3/6">
-            <div id="imgCard">
-              <img
-                className="w-full md:h-auto rounded-2xl"
-                src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg"
-                alt=""
-              />
-            </div>
-            <div className="py-4">
-              <button
-                id="loginButton"
-                className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer mt-3"
-              >
-                Nombre usuario
-              </button>
-            </div>
+            {Array.isArray(userData) ? (
+              userPhoto.map((userBlogs) => {
+                return (
+                  <>
+                    <div id="imgCard">
+                      <img
+                        className="w-full md:h-auto rounded-2xl"
+                        src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg"
+                        alt=""
+                      ></img>
+                    </div>
+                    <div className="py-4">
+                      <button
+                        id="loginButton"
+                        className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer mt-3"
+                      >
+                        {userBlogs.username}
+                      </button>
+                    </div>
+                  </>
+                );
+              })
+            ) : (
+              <h2>Nada</h2>
+            )}
           </div>
           <div className="flex flex-col md:w-3/6 p-4">
             <div className="">
@@ -46,78 +80,26 @@ function Profile() {
               </span>
             </div>
             <div className="md:grid md:grid-cols-3 gap-4 pt-4">
-              <div id="profileCard" className="rounded-xl w-56">
-                <div className="px-6 pb-4">
-                  <div className="font-bold text-xl mb-2 p-3">
-                    The Coldest Sunset
-                  </div>
-                  <p className="text-gray-700 text-base">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                    exercitationem praesentium nihil.
-                  </p>
-                </div>
-              </div>
-              <div id="profileCard" className="rounded-xl w-56">
-                <div className="px-6 pb-4">
-                  <div className="font-bold text-xl mb-2 p-3">
-                    The Coldest Sunset
-                  </div>
-                  <p className="text-gray-700 text-base">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                    exercitationem praesentium nihil.
-                  </p>
-                </div>
-              </div>
-              <div id="profileCard" className="rounded-xl w-56">
-                <div className="px-6 pb-4">
-                  <div className="font-bold text-xl mb-2 p-3">
-                    The Coldest Sunset
-                  </div>
-                  <p className="text-gray-700 text-base">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                    exercitationem praesentium nihil.
-                  </p>
-                </div>
-              </div>
-              <div id="profileCard" className="rounded-xl w-56">
-                <div className="px-6 pb-4">
-                  <div className="font-bold text-xl mb-2 p-3">
-                    The Coldest Sunset
-                  </div>
-                  <p className="text-gray-700 text-base">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                    exercitationem praesentium nihil.
-                  </p>
-                </div>
-              </div>
-              <div id="profileCard" className="rounded-xl w-56">
-                <div className="px-6 pb-4">
-                  <div className="font-bold text-xl mb-2 p-3">
-                    The Coldest Sunset
-                  </div>
-                  <p className="text-gray-700 text-base">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                    exercitationem praesentium nihil.
-                  </p>
-                </div>
-              </div>
-              <div id="profileCard" className="rounded-xl w-56">
-                <div className="px-6 pb-4">
-                  <div className="font-bold text-xl mb-2 p-3">
-                    The Coldest Sunset
-                  </div>
-                  <p className="text-gray-700 text-base">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                    exercitationem praesentium nihil.
-                  </p>
-                </div>
-              </div>
+              {Array.isArray(userData) ? (
+                featureBlogs.map((userBlogs) => {
+                  return (
+                    <div id="profileCard" className="rounded-xl w-56">
+                      <div className="px-6 pb-4">
+                        <div className="font-bold text-xl mb-2 p-3">
+                          {userBlogs.title}
+                        </div>
+                        <p className="text-gray-700 text-base">
+                          Lorem ipsum dolor sit amet, consectetur adipisicing
+                          elit. Voluptatibus quia, nulla! Maiores et perferendis
+                          eaque, exercitationem praesentium nihil.
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <h2>Nada</h2>
+              )}
             </div>
           </div>
         </a>
