@@ -23,7 +23,7 @@ const upload = multer({ storage: storage });
 router.route("/blogsHome").get(async (req, res) => {
   try {
     const query =
-      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b INNER JOIN post_categories as pc ON pc.id_category = b.category_id INNER JOIN users as u ON u.id_user = b.user_id";
+      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b  INNER JOIN users as u ON u.id_user = b.user_id";
     db.pool.query(query, (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -41,7 +41,7 @@ router.route("/blogsHome").get(async (req, res) => {
 router.route("/blogsHomeDate").get(async (req, res) => {
   try {
     const query =
-      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b INNER JOIN post_categories as pc ON pc.id_category = b.category_id INNER JOIN users as u ON u.id_user = b.user_id ORDER BY b.published_date DESC";
+      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b  INNER JOIN users as u ON u.id_user = b.user_id ORDER BY b.published_date DESC";
     db.pool.query(query, (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -61,7 +61,7 @@ router.route("/readBlog").get(async (req, res) => {
   console.log(id_post);
   try {
     const query =
-      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b INNER JOIN post_categories as pc ON pc.id_category = b.category_id INNER JOIN users as u ON u.id_user = b.user_id WHERE b.id_post = $1";
+      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b  INNER JOIN users as u ON u.id_user = b.user_id WHERE b.id_post = $1";
     db.pool.query(query, [id_post], (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
