@@ -23,7 +23,7 @@ const upload = multer({ storage: storage });
 router.route("/blogsHome").get(async (req, res) => {
   try {
     const query =
-      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b  INNER JOIN users as u ON u.id_user = b.user_id";
+      "SELECT p.post_id,p.title,p.headline,p.body, u.user FROM post as p INNER JOIN users as u ON u.user_id = p.user_id";
     db.pool.query(query, (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -41,7 +41,7 @@ router.route("/blogsHome").get(async (req, res) => {
 router.route("/blogsHomeDate").get(async (req, res) => {
   try {
     const query =
-      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b  INNER JOIN users as u ON u.id_user = b.user_id ORDER BY b.published_date DESC";
+      "SELECT p.post_id,p.title,p.headline,p.body, u.user FROM post as p INNER JOIN users as u ON u.user_id = p.user_id";
     db.pool.query(query, (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -80,7 +80,7 @@ router.route("/profileData").get(async (req, res) => {
   console.log(user_id);
   try {
     const query =
-      "SELECT p.title, p.headline, u.first_name || ' ' || u.last_name as username, u.file_path FROM post p INNER JOIN users u ON (u.id_user = p.user_id) WHERE u.id_user = '124'";
+      "SELECT p.title, p.headline, u.first_name || ' ' || u.last_name as username FROM post p INNER JOIN users u ON (u.user_id = p.user_id) WHERE u.user_id = '1'";
     db.pool.query(query, (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -95,19 +95,36 @@ router.route("/profileData").get(async (req, res) => {
   }
 });
 
+router.route("/categories").get(async (req,res) => {
+  try {
+    const query = 
+    "SELECT * FROM categories";
+    db.pool.query(query, (err,result) => {
+      if(err){
+        return res.status(500).json({ message: "Error querying the database" });
+      }
+      if(result.rows.length === 1){
+      }
+      res.status(200).json({ categories: result.rows })
+    })
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" })
+  }
+})
+
 router.post("/uploadImage", upload.single("file"), (req, res, next) => {
   const { originalname, size, path } = req.file;
-  const { user_id, titleT, headlineT, body } = req.body;
+  const { user_id, titleT, headlineT, body, category_id} = req.body;
 
-  console.log(user_id);
+  console.log("sdfsd",category_id);
   try {
     const queryImage =
       "INSERT INTO public.images(id_blog, filename, file_size, file_path) VALUES ($4, $1, $2, $3);";
 
     const queryBlog =
-      "INSERT INTO post (user_id, title, headline, published_date, body, category_id) VALUES ($1, $2, $3,NOW(), $4, 1) RETURNING id_post";
+      "INSERT INTO post (user_id, title, headline, published_date, body, category_id) VALUES ($1, $2, $3,NOW(), $4, $5) RETURNING post_id";
 
-    const valuesBlog = [user_id, titleT, headlineT, body];
+    const valuesBlog = [user_id, titleT, headlineT, body, category_id];
 
     const valuesImage = [originalname, size, path];
 
@@ -116,7 +133,7 @@ router.post("/uploadImage", upload.single("file"), (req, res, next) => {
         console.error("Error occurred Blog: ", error);
       } else {
         const postId = results.rows[0];
-        valuesImage.push(postId.id_post);
+        valuesImage.push(postId.post_id);
         console.log("AQUI ", valuesImage);
         db.pool.query(queryImage, valuesImage, (error, results) => {
           if (error) {
