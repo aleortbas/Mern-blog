@@ -33,18 +33,19 @@ function Home() {
       .catch((error) => console.log(error));
   }, []);
 
-  console.log(blogsByDate);
 
   const randomStartBlogs = Math.floor(Math.random() * 10);
   const randomEndBlogs = Math.floor(Math.random() * 10);
   const featureBlogs = blogsByDate.slice(0, 6);
+
+  console.log("?????????Q",featureBlogs)
 
   function handleClick() {
     setPruebas(pruebas + 10);
   }
 
   return (
-    <div className="container mt-36 m-auto">
+    <div className="container mt-20 m-auto">
       <div></div>
       {/** feature line */}
       <div className="flex items-center py-4">
@@ -100,7 +101,7 @@ function Home() {
       </div>
 
       {/** latest blog */}
-      <div className="flex items-center pt-36">
+      <div className="flex items-center pt-20">
         <span className="flex-shrink text-2xl text-gray-500 mr-9">
           LATEST BLOG
         </span>
