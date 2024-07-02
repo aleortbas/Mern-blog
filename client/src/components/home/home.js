@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 function Home() {
   const [blogsByDate, setBlogsByDate] = useState([]);
   const [blogsByPopularity, setBlogsByPopularity] = useState([]);
+  const [path, setFilePath] = useState("");
+  const [imagenP, setImagenP] = useState({});
   const [pruebas, setPruebas] = useState(10);
 
   useEffect(() => {
@@ -33,18 +35,47 @@ function Home() {
       .catch((error) => console.log(error));
   }, []);
 
-  console.log(blogsByDate);
-
-  const randomStartBlogs = Math.floor(Math.random() * 10);
-  const randomEndBlogs = Math.floor(Math.random() * 10);
   const featureBlogs = blogsByDate.slice(0, 6);
+  const popularityBlogs = blogsByPopularity.slice(0, 6);
+
+  useEffect(() => {
+
+    let filePathPost, filePathUser = "";
+
+    for (let i = 0; i < blogsByPopularity.length; i++) {
+      const elementBlogs = blogsByPopularity[i];
+      const splitPathPost = elementBlogs.file_path.split("/")
+      const splitPathUser = elementBlogs.file_path_user.split("/")
+      console.log("First FOR",splitPathPost[4])
+      filePathPost = splitPathPost[4]
+      /* console.log(filePathPost); */
+      filePathUser = splitPathUser[4]
+    }
+
+    setFilePath(filePathPost);
+
+    if (filePathPost) {
+      fetch(`http://localhost:5000/uploads/${filePathPost}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.blob())
+        .then((blob) => {
+          const imageUrl = URL.createObjectURL(blob);
+          setImagenP(imageUrl);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [blogsByPopularity]);
 
   function handleClick() {
     setPruebas(pruebas + 10);
   }
 
   return (
-    <div className="container mt-36 m-auto">
+    <div className="container mt-20 m-auto">
       <div></div>
       {/** feature line */}
       <div className="flex items-center py-4">
@@ -100,7 +131,7 @@ function Home() {
       </div>
 
       {/** latest blog */}
-      <div className="flex items-center pt-36">
+      <div className="flex items-center pt-20">
         <span className="flex-shrink text-2xl text-gray-500 mr-9">
           LATEST BLOG
         </span>
@@ -109,7 +140,7 @@ function Home() {
 
       <div className="md:grid md:grid-cols-2 gap-14 pt-16">
         {Array.isArray(blogsByPopularity) ? (
-          featureBlogs.map((blogsByPopularity) => {
+          popularityBlogs.map((blogsByPopularity) => {
             return (
               <div className="mt-7">
                 <div id="homeCard" className="rounded-xl">
@@ -117,7 +148,7 @@ function Home() {
                     <div id="imgCard">
                       <img
                         className="w-full md:h-auto rounded-2xl"
-                        src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg"
+                        src="https://marvel-b1-cdn.bc0a.com/f00000000163918/www.care.org/wp-content/uploads/2021/10/Boeing.png"
                         alt=""
                       />
                     </div>
@@ -138,17 +169,17 @@ function Home() {
                       {blogsByPopularity.headline}
                     </p>
                     <div className="flex mt-11">
-                      <img
+                      {imagenP && <img
                         className="w-16 h-16 rounded-full mr-4"
-                        src="https://marvel-b1-cdn.bc0a.com/f00000000163918/www.care.org/wp-content/uploads/2021/10/Boeing.png"
+                        src={imagenP}
                         alt="Avatar of Jonathan Reinink"
-                      />
+                      />}
                       <div className="text-sm">
                         <p className="text-white font-bold m-0 text-lg">
                           {blogsByPopularity.user}
                         </p>
                         <p className="text-base text-gray-500">
-                          {blogsByPopularity.published_date}
+                          {blogsByPopularity.file_path}
                         </p>
                       </div>
                     </div>

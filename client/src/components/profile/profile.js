@@ -8,8 +8,6 @@ function Profile() {
   const [userData, setUserData] = useState([]);
   const [files, setFiles] = useState([]);
 
-  var file;
-
   useEffect(() => {
     fetch(`http://localhost:5000/profileData`, {
       method: "GET",
@@ -121,19 +119,32 @@ function Profile() {
 function Box({ onClose }) {
   const [isShowBlogForm, setBlogForm] = useState(true);
   const inputImage = useRef(null);
+  const [title, setTitle] = useState(null);
+  const [headline, setHeadline] = useState(null);
   const [body, setBody] = useState(null);
+  const [categoryId, setCategoryId] = useState(null);
+  const [categoryName, setCategoryName] = useState(null);
 
   const [files, setFiles] = useState([]);
 
   /*  const user_id = localStorage.getItem("userId"); */
   const user_id = parseInt(useUserId());
 
-  const titleT = "title";
-  const headlineT = "headline";
-
   var file;
 
-  const textareaRows = 10; // CONDICIONAL
+  useEffect(() => {
+    fetch(`http://localhost:5000/categories`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "appplication/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCategoryId(data.categories);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   const packFiles = (files) => {
     const data = new FormData();
@@ -149,8 +160,8 @@ function Box({ onClose }) {
         const image = URL.createObjectURL(f);
         return (
           <l className="text-black" key={i}>
-            {f.name} - {f.type}
-            <img src={image} />
+            {/* {f.name} - {f.type} */}
+            <img className="h-20 w-20" src={image} />
           </l>
         );
       })}
@@ -163,13 +174,15 @@ function Box({ onClose }) {
   };
 
   const handleSubmitPostBlog = async (e) => {
+    console.log("category", categoryName);
     e.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
     formData.append("user_id", user_id);
-    formData.append("titleT", titleT);
-    formData.append("headlineT", headlineT);
+    formData.append("titleT", title);
+    formData.append("headlineT", headline);
     formData.append("body", body);
+    formData.append("category_id",categoryName)
     try {
       const response = await fetch(`http://localhost:5000/uploadImage`, {
         method: "POST",
@@ -177,7 +190,7 @@ function Box({ onClose }) {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        console.log("datos", data);
         alert("Blog posted");
         handleClose();
       } else {
@@ -210,19 +223,36 @@ function Box({ onClose }) {
 
         <div className="justify-center p-4">
           <form onSubmit={handleSubmitPostBlog}>
+            <input
+              className="w-full m-1 p-1"
+              placeholder="Title"
+              name="title"
+              type="text"
+              onChange={(e) => setTitle(e.target.value)}
+            ></input>
+            <textarea
+              //rows={textareaRows}
+              rows="3"
+              className="bg-transparent w-full outline-none text-black resize-none border-t m-1"
+              type="text"
+              placeholder="Type your message..."
+              name="feedback"
+              onChange={(e) => setHeadline(e.target.value)}
+              required
+            ></textarea>
             <textarea
               //rows={textareaRows}
               rows="10"
-              className="bg-transparent w-full outline-none text-black resize-none"
+              className="bg-transparent w-full outline-none text-black resize-none border-t m-1"
               type="text"
               placeholder="Type your message..."
               name="feedback"
               onChange={(e) => setBody(e.target.value)}
               required
             ></textarea>
-            <div className="justify-start p-4 border-t">
+            <div className="justify-start  border-t">
               <input
-                className="absolute inset-0 opacity-0 cursor-pointer"
+                className="hidden"
                 ref={inputImage}
                 type="file"
                 accept="image/png, image/jpeg"
@@ -231,8 +261,11 @@ function Box({ onClose }) {
               />
               {renderFileList()}
               <button
-                className="bg-[#101828] text-white text-center font-semibold h-11 w-11 mr-2 rounded-full cursor-pointer"
-                onClick={() => inputImage.current.click()} // Trigger click on input element when button is clicked
+                className="bg-[#101828] text-white text-center font-semibold h-11 w-11 mr-2 rounded-full cursor-pointer z-10"
+                onClick={(e) => {
+                  e.preventDefault();
+                  inputImage.current.click();
+                }}
               >
                 <FontAwesomeIcon
                   className="text-white"
@@ -240,6 +273,20 @@ function Box({ onClose }) {
                   icon={faImage}
                 />
               </button>
+              {Array.isArray(categoryId) && categoryId.length > 0 ? (
+                <select className="bg-[#101828] text-white text-center font-semibold  h-11  w-32 mr-2 mt-4 rounded-full  cursor-pointer" value={categoryName} onChange={(e) => setCategoryName(e.target.value)}>
+                  {categoryId.map((categoriesValues) => (
+                    <option
+                      key={categoriesValues.category_id}
+                      value={categoriesValues.category_id}
+                    >
+                      {categoriesValues.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <h2>Loading...</h2>
+              )}
               <button className="bg-[#101828] text-white text-center font-semibold  h-11  w-32 mr-2 mt-4 rounded-full  cursor-pointer">
                 Publicar
               </button>

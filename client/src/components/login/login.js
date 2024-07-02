@@ -50,11 +50,12 @@ function Login({ onClose }) {
       });
       if (response.ok) {
         const data = await response.json();
-        //console.log("Data received:", data.id_user);
+        console.log("Data received:", data);
+        console.log("Data user received:", data.user.user_id);
         if (data != null) {
           if (endpoint) {
             localStorage.setItem("accessToken", data.token);
-            localStorage.setItem("userId", data.id_user);
+            localStorage.setItem("userId", data.user.user_id);
             //fetch token
             const accessToken = data.token;
             const authHeader = `Bearer ${accessToken}`;
@@ -111,9 +112,9 @@ function Login({ onClose }) {
                 </p>
               </div>
               <div className="inline-block justify-center ml-3 mb-3">
-                <label className="mb-1">username</label>
+                <label className="block">username</label>
                 <input
-                  className="bg-transparent w-[405px] h-11 text-black !rounded-2xl"
+                  className="bg-transparent w-auto h-11 text-black !rounded-2xl"
                   type="text"
                   placeholder="Username"
                   name="username"
@@ -122,9 +123,9 @@ function Login({ onClose }) {
                 ></input>
               </div>
               <div className="inline-block justify-center ml-3 mb-3">
-                <label className="mb-1">Password</label>
+                <label className="block">Password</label>
                 <input
-                  className="bg-transparent w-[405px] h-11 text-black !rounded-2xl"
+                  className="bg-transparent w-auto h-11 text-black !rounded-2xl"
                   type="password"
                   placeholder="password"
                   name="password"
@@ -162,9 +163,9 @@ function Login({ onClose }) {
                 </p>
               </div>
               <div className="inline-block justify-center m-3">
-                <label className="mb-1">First Name</label>
+                <label className="mb-1 block">First Name</label>
                 <input
-                  className="focus:border-red-500 bg-transparent w-[405px] h-11 text-black rounded-2xl"
+                  className="focus:border-red-500 bg-transparent w-auto h-11 text-black rounded-2xl"
                   type="text"
                   placeholder="First Name"
                   name="FirstName"
@@ -173,9 +174,9 @@ function Login({ onClose }) {
                 ></input>
               </div>
               <div className="inline-block justify-center ml-3 mb-3">
-                <label className="mb-1">Last Name</label>
+                <label className="mb-1 block">Last Name</label>
                 <input
-                  className="bg-transparent w-[405px] h-11 text-black !rounded-2xl"
+                  className="bg-transparent w-auto h-11 text-black !rounded-2xl"
                   type="text"
                   placeholder="Last Name"
                   name="lastName"
@@ -184,9 +185,9 @@ function Login({ onClose }) {
                 ></input>
               </div>
               <div className="inline-block justify-center ml-3 mb-3">
-                <label className="mb-1">Email</label>
+                <label className="mb-1 block">Email</label>
                 <input
-                  className="bg-transparent w-[405px] h-11 text-black !rounded-2xl"
+                  className="bg-transparent w-auto h-11 text-black !rounded-2xl"
                   type="text"
                   placeholder="Email"
                   name="email"
@@ -195,9 +196,9 @@ function Login({ onClose }) {
                 ></input>
               </div>
               <div className="inline-block justify-center ml-3 mb-3">
-                <label className="mb-1">username</label>
+                <label className="block">username</label>
                 <input
-                  className="bg-transparent w-[405px] h-11 text-black !rounded-2xl"
+                  className="bg-transparent w-auto h-11 text-black !rounded-2xl"
                   type="text"
                   placeholder="Username"
                   name="username"
@@ -206,9 +207,9 @@ function Login({ onClose }) {
                 ></input>
               </div>
               <div className="inline-block justify-center ml-3 mb-3">
-                <label className="mb-1">Password</label>
+                <label className="block">Password</label>
                 <input
-                  className="bg-transparent w-[405px] h-11 text-black !rounded-2xl"
+                  className="bg-transparent w-auto h-11 text-black !rounded-2xl"
                   type="password"
                   placeholder="password"
                   name="password"
