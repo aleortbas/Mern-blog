@@ -4,7 +4,7 @@ const authMiddleware = require("../middleware");
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
-const { log } = require("console");
+const path = require("node:path")
 
 require("dotenv").config();
 const router = express.Router();
@@ -18,12 +18,17 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  limits: {fileSize:1000000}
+ });
+
+router.use('/uploads', express.static("/home/aleortbas/Documents/imagesBlog"));
 
 router.route("/blogsHome").get(async (req, res) => {
   try {
     const query =
-      "SELECT p.post_id,p.title,p.headline,p.body, u.user FROM post as p INNER JOIN users as u ON u.user_id = p.user_id";
+      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user, i.file_path FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id";
     db.pool.query(query, (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -38,10 +43,23 @@ router.route("/blogsHome").get(async (req, res) => {
   }
 });
 
+router.get("/images/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, "../home/aleortbas/Documents/imagesBlog", filename);
+
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      res.status(404).send("Image not found");
+    } else {
+      res.sendFile(filePath);
+    }
+  });
+});
+
 router.route("/blogsHomeDate").get(async (req, res) => {
   try {
     const query =
-      "SELECT p.post_id,p.title,p.headline,p.body, u.user FROM post as p INNER JOIN users as u ON u.user_id = p.user_id";
+      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user FROM post as p INNER JOIN users as u ON u.user_id = p.user_id";
     db.pool.query(query, (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
