@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
+import useFetchImages from '/home/aleortbas/Documents/Mern-blog/client/src/hooks/useFetchLoader'
 
 function Home() {
   const [blogsByDate, setBlogsByDate] = useState([]);
   const [blogsByPopularity, setBlogsByPopularity] = useState([]);
-  const [path, setFilePath] = useState("");
-  const [imagenP, setImagenP] = useState({});
+  const [filePathUser, setFilePathUser] = useState("");
   const [pruebas, setPruebas] = useState(10);
 
   useEffect(() => {
@@ -38,37 +38,8 @@ function Home() {
   const featureBlogs = blogsByDate.slice(0, 6);
   const popularityBlogs = blogsByPopularity.slice(0, 6);
 
-  useEffect(() => {
+  const { imageBlog, imageUser } = useFetchImages(blogsByPopularity);
 
-    let filePathPost, filePathUser = "";
-
-    for (let i = 0; i < blogsByPopularity.length; i++) {
-      const elementBlogs = blogsByPopularity[i];
-      const splitPathPost = elementBlogs.file_path.split("/")
-      const splitPathUser = elementBlogs.file_path_user.split("/")
-      console.log("First FOR",splitPathPost[4])
-      filePathPost = splitPathPost[4]
-      /* console.log(filePathPost); */
-      filePathUser = splitPathUser[4]
-    }
-
-    setFilePath(filePathPost);
-
-    if (filePathPost) {
-      fetch(`http://localhost:5000/uploads/${filePathPost}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.blob())
-        .then((blob) => {
-          const imageUrl = URL.createObjectURL(blob);
-          setImagenP(imageUrl);
-        })
-        .catch((error) => console.log(error));
-    }
-  }, [blogsByPopularity]);
 
   function handleClick() {
     setPruebas(pruebas + 10);
@@ -98,11 +69,10 @@ function Home() {
                 >
                   <div className="px-8 py-8 md:w-3/6">
                     <div id="imgCard">
-                      <img
+                      {imageBlog && <img 
                         className="w-full md:h-auto rounded-2xl"
-                        src="https://wallpapercave.com/wp/wp58250.jpg"
-                        alt=""
-                      />
+                        src={imageBlog}
+                      />}
                     </div>
                   </div>
                   <div className="flex flex-col justify-between md:w-3/6 p-4 leading-normal">
@@ -146,11 +116,11 @@ function Home() {
                 <div id="homeCard" className="rounded-xl">
                   <div className="px-8 py-8">
                     <div id="imgCard">
-                      <img
+                    {imageBlog && <img
                         className="w-full md:h-auto rounded-2xl"
-                        src="https://marvel-b1-cdn.bc0a.com/f00000000163918/www.care.org/wp-content/uploads/2021/10/Boeing.png"
+                        src={imageBlog}
                         alt=""
-                      />
+                      />}
                     </div>
                   </div>
                   <div className="px-6 pb-4">
@@ -169,9 +139,9 @@ function Home() {
                       {blogsByPopularity.headline}
                     </p>
                     <div className="flex mt-11">
-                      {imagenP && <img
+                      {imageUser && <img
                         className="w-16 h-16 rounded-full mr-4"
-                        src={imagenP}
+                        src={imageUser}
                         alt="Avatar of Jonathan Reinink"
                       />}
                       <div className="text-sm">
