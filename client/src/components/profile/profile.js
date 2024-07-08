@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import useFetchImages from '/home/aleortbas/Documents/Mern-blog/client/src/hooks/useFetchLoader'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faX, faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { useUserId } from "../../User.Context";
