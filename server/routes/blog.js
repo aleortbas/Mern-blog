@@ -79,7 +79,7 @@ router.route("/readBlog").get(async (req, res) => {
   console.log(id_post);
   try {
     const query =
-      "SELECT b.id_post, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, pc.category_name, u.user FROM post as b  INNER JOIN users as u ON u.id_user = b.user_id WHERE b.id_post = $1";
+      "SELECT b.post_id, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, u.user FROM post as b INNER JOIN users as u ON u.user_id = b.user_id WHERE b.post_id = $1";
     db.pool.query(query, [id_post], (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
