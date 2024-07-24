@@ -112,6 +112,9 @@ function Home() {
         {Array.isArray(blogsByPopularity) ? (
           popularityBlogs.map((blogsByPopularity) => {
             return (
+              <a
+              href={`/postBlog/${blogsByDate.id_post}`}
+              >
               <div className="mt-7">
                 <div id="homeCard" className="rounded-xl">
                   <div className="px-8 py-8">
@@ -156,6 +159,7 @@ function Home() {
                   </div>
                 </div>
               </div>
+              </a>
             );
           })
         ) : (

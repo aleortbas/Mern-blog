@@ -12,12 +12,11 @@ const useFetchImages = (blogs) => {
       const elementBlogs = blogs[i];
       const splitPathPost = elementBlogs.file_path.split("/")
       const splitPathUser = elementBlogs.file_path_user.split("/")
-      filePathPost = splitPathPost[4]
+      filePathPost = splitPathPost[5]
       filePathUser = splitPathUser[4]
-    console.log("FOR LOOP filePathPost: ", filePathPost , " filePathUser: ", filePathUser);
 
     }
-
+  
     const fetchData = async () => {
       try {
         const [response1, response2] = await Promise.all([
