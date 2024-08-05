@@ -35,7 +35,7 @@ function Home() {
       .catch((error) => console.log(error));
   }, []);
 
-  const featureBlogs = blogsByDate.slice(0, 6);
+  const featureBlogs = blogsByDate.slice(0, 14);
   const popularityBlogs = blogsByPopularity.slice(0, 6);
 
   const { imageBlog, imageUser } = useFetchImages(blogsByPopularity);
@@ -44,6 +44,8 @@ function Home() {
   function handleClick() {
     setPruebas(pruebas + 10);
   }
+
+  console.log("???",blogsByDate);
 
   return (
     <div className="container mt-20 m-auto">
@@ -63,7 +65,7 @@ function Home() {
             return (
               <>
                 <a
-                  href={`/postBlog/${blogsByDate.id_post}`}
+                  href={`/postBlog/${blogsByDate.post_id}`}
                   id="homeCard"
                   className="flex flex-col items-center bg-[#101828] rounded-xl no-underline my-16 md:flex-row "
                 >

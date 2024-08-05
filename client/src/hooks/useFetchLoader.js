@@ -12,10 +12,10 @@ const useFetchImages = (blogs) => {
       const elementBlogs = blogs[i];
       const splitPathPost = elementBlogs.file_path.split("/")
       const splitPathUser = elementBlogs.file_path_user.split("/")
-      filePathPost = splitPathPost[5]
-      filePathUser = splitPathUser[4]
-
+      filePathPost = splitPathPost.pop()
+      filePathUser = splitPathUser.pop()
     }
+
   
     const fetchData = async () => {
       try {
@@ -37,8 +37,9 @@ const useFetchImages = (blogs) => {
         setImageBlog(url1)
         setImageUser(url2)
 
+        console.log("It works");
       } catch (error) {
-        console.error( error);
+        console.error("SU PUTA MADRE: ", error);
       }
     }
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import useFetchImages from '/home/aleortbas/Documents/Mern-blog/client/src/hooks/useFetchLoader'
 import Breadcrumbs from "../breadcrumb/breadcrumbs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
@@ -7,18 +8,20 @@ import {
   faXTwitter,
   faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
+import { useParams } from "react-router-dom";
 
 function PostBlog(props) {
+  const {post_id} = useParams()
   const [blogs, setBlogs] = useState([]);
   const [idPost, setIdPost] = useState(null);
 
+  console.log("post_id ",post_id);
+
   useEffect(() => {
     const url = window.location.href;
-    const idPostIndex = url.lastIndexOf("/") + 1;
-    const idPostValue = url.substring(idPostIndex);
-    setIdPost(idPostValue);
 
-    fetch(`http://localhost:5000/readBlog?id_post=${idPostValue}`, {
+
+    fetch(`http://localhost:5000/readBlog?id_post=${post_id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -31,6 +34,8 @@ function PostBlog(props) {
       })
       .catch((error) => console.log(error));
   }, []);
+  const {imageUser, imageBlog} = useFetchImages(blogs);
+  console.log("IMAGE",imageBlog);
   return (
     <>
       <div className=" flex justify-center mt-36">
@@ -50,11 +55,11 @@ function PostBlog(props) {
 
           <div className="flex mt-5 m-auto justify-between w-2/3">
             <div className="flex">
-              <img
-                className="w-16 h-16 rounded-full mr-4"
-                src="https://marvel-b1-cdn.bc0a.com/f00000000163918/www.care.org/wp-content/uploads/2021/10/Boeing.png"
-                alt="Avatar of Jonathan Reinink"
-              />
+            {imageUser && <img
+                        className="w-16 h-16 rounded-full mr-4"
+                        src={imageUser}
+                        alt="Avatar of Jonathan Reinink"
+                      />}
               <div className="text-sm">
                 {Array.isArray(blogs) ? (
                   blogs.map((blog) => {
@@ -120,11 +125,11 @@ function PostBlog(props) {
 
           <div className="px-8 py-8 my-11 md: ">
             <div className="rounded-xl" id="imgCard">
-              <img
+              {imageBlog && <img
                 className="w-full md:h-auto rounded-2xl"
-                src="https://c4.wallpaperflare.com/wallpaper/580/201/241/clouds-the-plane-liner-flight-wallpaper-preview.jpg"
+                src={imageBlog}
                 alt=""
-              />
+              />}
             </div>
           </div>
 
@@ -143,11 +148,11 @@ function PostBlog(props) {
                           <p className="mb-5" key={index}>
                             {paragraph}
                           </p>
-                          <img
+                          {imageBlog &&<img
                             className="w-full md:h-auto mb-5 rounded-2xl"
-                            src="https://wallpapercave.com/wp/wp58250.jpg"
+                            src={imageBlog}
                             alt=""
-                          />
+                          />}
                         </>
                       ))}
                     </div>

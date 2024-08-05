@@ -39,7 +39,7 @@ function App() {
           <Route path="/FormBlog" element={<FormBlog />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/PostBlog/:id_post" element={<PostBlog />} />
+          <Route path="/PostBlog/:post_id" element={<PostBlog />} />
         </Routes>
       </UserProvider>
 
