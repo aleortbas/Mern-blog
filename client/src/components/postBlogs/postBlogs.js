@@ -7,18 +7,18 @@ import {
   faXTwitter,
   faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
+import { useParams } from "react-router-dom";
 
 function PostBlog(props) {
+  const {post_id} = useParams()
   const [blogs, setBlogs] = useState([]);
   const [idPost, setIdPost] = useState(null);
 
   useEffect(() => {
     const url = window.location.href;
-    const idPostIndex = url.lastIndexOf("/") + 1;
-    const idPostValue = url.substring(idPostIndex);
-    setIdPost(idPostValue);
 
-    fetch(`http://localhost:5000/readBlog?id_post=${idPostValue}`, {
+
+    fetch(`http://localhost:5000/readBlog?id_post=${post_id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

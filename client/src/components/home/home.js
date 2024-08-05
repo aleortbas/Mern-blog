@@ -45,6 +45,8 @@ function Home() {
     setPruebas(pruebas + 10);
   }
 
+  console.log("???",blogsByDate);
+
   return (
     <div className="container mt-20 m-auto">
       <div></div>
@@ -63,7 +65,7 @@ function Home() {
             return (
               <>
                 <a
-                  href={`/postBlog/${blogsByDate.id_post}`}
+                  href={`/postBlog/${blogsByDate.post_id}`}
                   id="homeCard"
                   className="flex flex-col items-center bg-[#101828] rounded-xl no-underline my-16 md:flex-row "
                 >
