@@ -130,43 +130,44 @@ router.route("/categories").get(async (req,res) => {
   }
 })
 
-router.post("/uploadImage", upload.single("file"), (req, res, next) => {
-  const { originalname, size, path } = req.file;
+
+router.post("/uploadImage", upload.array("file"), async (req, res, next) => {
+  const prueba = req.files
+  var originalname, size, path
   const { user_id, titleT, headlineT, body, category_id} = req.body;
 
-  console.log("sdfsd",category_id);
   try {
-    const queryImage =
-      "INSERT INTO public.images(id_blog, filename, file_size, file_path) VALUES ($4, $1, $2, $3);";
-
     const queryBlog =
-      "INSERT INTO post (user_id, title, headline, published_date, body, category_id) VALUES ($1, $2, $3,NOW(), $4, $5) RETURNING post_id";
-
+    "INSERT INTO post (user_id, title, headline, published_date, body, category_id) VALUES ($1, $2, $3,NOW(), $4, $5) RETURNING post_id";
     const valuesBlog = [user_id, titleT, headlineT, body, category_id];
+    const resultBlog = await db.pool.query(queryBlog, valuesBlog);
+    const postId = resultBlog.rows[0].post_id;
 
-    const valuesImage = [originalname, size, path];
+    const queryImage =
+    "INSERT INTO public.images(id_blog, filename, file_size, file_path) VALUES ($1, $2, $3, $4);";
 
-    db.pool.query(queryBlog, valuesBlog, (error, results) => {
-      if (error) {
-        console.error("Error occurred Blog: ", error);
-      } else {
-        const postId = results.rows[0];
-        valuesImage.push(postId.post_id);
-        console.log("AQUI ", valuesImage);
-        db.pool.query(queryImage, valuesImage, (error, results) => {
-          if (error) {
-            console.error("Error occurred Image: ", error);
-          } else {
-            console.log("Post and Image inserted succesfully");
-          }
-        });
-      }
-    });
+    for (let i = 0; i < prueba.length; i++) {
+      postId
+      originalname = prueba[i].originalname;
+      size = prueba[i].size;
+      path = prueba[i].path;
 
+      const valuesImage = [originalname, size, path];
+      console.log(valuesImage);
+          valuesImage.unshift(postId);
+          console.log("AQUI ", valuesImage);
+          db.pool.query(queryImage, valuesImage, (error, results) => {
+            if (error) {
+              console.error("Error occurred Image: ", error);
+            } else {
+              console.log("Post and Image inserted succesfully");
+            }
+          });
+
+    }
     res.status(200).json({ message: "image data added", id: "id_post" });
   } catch (error) {
     res.status(500).json({ message: "server error" });
   }
 });
-
 module.exports = router;
