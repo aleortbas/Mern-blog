@@ -19,7 +19,7 @@ function Profile() {
       .then((response) => response.json())
       .then((data) => {
         setUserData(data.blog);
-        console.log("userblog", userData);
+        /* console.log("userblog", userData); */
       })
       .catch((error) => console.log(error));
   }, []);
@@ -35,7 +35,7 @@ function Profile() {
   const featureBlogs = userData.slice(0, 6);
   const userPhoto = userData.slice(0, 1);
   const imagen = userPhoto;
-  console.log("IMAGE", imagen[0]);
+  /* console.log("IMAGE", imagen[0]); */
 
   return (
     <>
@@ -131,7 +131,7 @@ function Box({ onClose }) {
   /*  const user_id = localStorage.getItem("userId"); */
   const user_id = parseInt(useUserId());
 
-  var file;
+  var file = [];
 
   useEffect(() => {
     fetch(`http://localhost:5000/categories`, {
@@ -157,8 +157,9 @@ function Box({ onClose }) {
   const renderFileList = () => (
     <div className="flex">
       {[...files].slice(0, 3).map((f, i) => {
-        file = f;
+        file.push(f);
         const image = URL.createObjectURL(f);
+        console.log("render imagenes ", file);
         return (
           <l className="text-black" key={i}>
             {/* {f.name} - {f.type} */}
@@ -175,10 +176,12 @@ function Box({ onClose }) {
   };
 
   const handleSubmitPostBlog = async (e) => {
-    console.log("category", categoryName);
     e.preventDefault();
     const formData = new FormData();
-    formData.append("file", file);
+    file.forEach(f => {
+      formData.append("file", f);
+    });
+    console.log("enviado al uploadimage ", file);
     formData.append("user_id", user_id);
     formData.append("titleT", title);
     formData.append("headlineT", headline);
@@ -191,7 +194,7 @@ function Box({ onClose }) {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log("datos", data);
+       /*  console.log("datos", data); */
         alert("Blog posted");
         handleClose();
       } else {

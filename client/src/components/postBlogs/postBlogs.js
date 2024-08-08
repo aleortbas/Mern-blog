@@ -15,7 +15,7 @@ function PostBlog(props) {
   const [blogs, setBlogs] = useState([]);
   const [idPost, setIdPost] = useState(null);
 
-  console.log("post_id ",post_id);
+ /*  console.log("post_id ",post_id); */
 
   useEffect(() => {
     const url = window.location.href;
@@ -29,13 +29,13 @@ function PostBlog(props) {
     })
       .then((response) => response.json()) //extracting JSON data
       .then((data) => {
-        console.log(data);
+        /* console.log(data); */
         setBlogs(data.blog);
       })
       .catch((error) => console.log(error));
   }, []);
   const {imageUser, imageBlog} = useFetchImages(blogs);
-  console.log("IMAGE",imageBlog);
+  /* console.log("IMAGE",imageBlog); */
   return (
     <>
       <div className=" flex justify-center mt-36">
