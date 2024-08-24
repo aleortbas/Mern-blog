@@ -1,49 +1,59 @@
 import { useState, useEffect } from "react";
 
 const useFetchImages = (blogs) => {
-  const [imageBlog, setImageBlog] = useState("");
-  const [imageUser, setImageUser] = useState("");
+  const fetchedImageBlogs = [];
+  const fetchedImageUsers = [];
+
+  const [imageBlog, setImageBlog] = useState([]);
+  const [imageUser, setImageUser] = useState([]);
 
   useEffect(() => {
 
     let filePathPost, filePathUser = "";
 
+
+    const fetchData = async () => {
     for (let i = 0; i < blogs.length; i++) {
       const elementBlogs = blogs[i];
-      const splitPathPost = elementBlogs.file_path.split("/")
+      const splitIdPost = elementBlogs.post_id
+      const splitPathPost = elementBlogs.file_path.split(" ")
+      const file_path_post = splitPathPost.map(path => path.split("/").pop())
       const splitPathUser = elementBlogs.file_path_user.split("/")
-      filePathPost = splitPathPost.pop()
+      filePathPost = file_path_post
       filePathUser = splitPathUser.pop()
-    }
 
-  
-    const fetchData = async () => {
+      const requestData = {
+        filePathPost,
+        filePathUser
+      };
+
       try {
-        const [response1, response2] = await Promise.all([
-          fetch(`http://localhost:5000/uploads/${filePathPost}`),
-          fetch(`http://localhost:5000/uploads/${filePathUser}`)
-        ])
-        if (!response1.ok || !response2.ok) {
-          throw new Error('Network response was not ok')
+
+        const response1 = await fetch(`http://localhost:5000/imageJson`,{
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        })
+        if (response1.ok) {
+          const data = await response1.json();
+          console.log(data);
+          const image_blog = data.image_Blog
+
+          fetchedImageBlogs.push(image_blog)
         }
-
-        const blob1 = await response1.blob()
-        const blob2 = await response2.blob()
-
-        const url1 = await URL.createObjectURL(blob1)
-
-        const url2 = await URL.createObjectURL(blob2)
-
-        setImageBlog(url1)
-        setImageUser(url2)
-
-        console.log("It works");
       } catch (error) {
         console.error("SU PUTA MADRE: ", error);
       }
     }
 
-    fetchData();
+    setImageBlog(fetchedImageBlogs)
+    console.log("HOOK imageBlog",fetchedImageBlogs);
+
+  }
+  fetchData();
+
 
   }, [blogs]);
 

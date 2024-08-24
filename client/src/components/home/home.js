@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useFetchImages from '/home/aleortbas/Documents/Mern-blog/client/src/hooks/useFetchLoader'
+import useFetchImages from "/home/aleortbas/Documents/Mern-blog/client/src/hooks/useFetchLoader";
 
 function Home() {
   const [blogsByDate, setBlogsByDate] = useState([]);
@@ -36,16 +36,15 @@ function Home() {
   }, []);
 
   const featureBlogs = blogsByDate.slice(0, 14);
+  console.log("blogsByDate", blogsByDate);
   const popularityBlogs = blogsByPopularity.slice(0, 6);
 
-  const { imageBlog, imageUser } = useFetchImages(blogsByPopularity);
-
+  /* const { imageBlog, imageUser } = useFetchImages(blogsByDate); */
+ /*  console.log("imageBlog : ", imageBlog); */
 
   function handleClick() {
     setPruebas(pruebas + 10);
   }
-
-  console.log("???",blogsByDate);
 
   return (
     <div className="container mt-20 m-auto">
@@ -71,10 +70,16 @@ function Home() {
                 >
                   <div className="px-8 py-8 md:w-3/6">
                     <div id="imgCard">
-                      {imageBlog && <img 
-                        className="w-full md:h-auto rounded-2xl"
-                        src={imageBlog}
-                      />}
+                      {imageBlog.map((url, index) => {
+                        return (
+                          <img
+                            key={index}
+                            src={url}
+                            alt={`Image ${index + 1}`}
+                            className="my-custom-image-class" // Optional: Add any custom classes you want
+                          />
+                        );
+                      })}
                     </div>
                   </div>
                   <div className="flex flex-col justify-between md:w-3/6 p-4 leading-normal">
@@ -114,53 +119,55 @@ function Home() {
         {Array.isArray(blogsByPopularity) ? (
           popularityBlogs.map((blogsByPopularity) => {
             return (
-              <a
-              href={`/postBlog/${blogsByDate.id_post}`}
-              >
-              <div className="mt-7">
-                <div id="homeCard" className="rounded-xl">
-                  <div className="px-8 py-8">
-                    <div id="imgCard">
-                    {imageBlog && <img
-                        className="w-full md:h-auto rounded-2xl"
-                        src={imageBlog}
-                        alt=""
-                      />}
+              <a href={`/postBlog/${blogsByDate.id_post}`}>
+                <div className="mt-7">
+                  <div id="homeCard" className="rounded-xl">
+                    <div className="px-8 py-8">
+                      <div id="imgCard">
+                        {imageBlog && (
+                          <img
+                            className="w-full md:h-auto rounded-2xl"
+                            src={imageBlog}
+                            alt=""
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <div className="px-6 pb-4">
-                    <div className="py-3">
-                      <button
-                        id="imgCard"
-                        className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
-                      >
-                        {blogsByPopularity.category_name}
-                      </button>
-                    </div>
-                    <div className="font-bold text-xl mb-2">
-                      {blogsByPopularity.title}
-                    </div>
-                    <p className="text-gray-700 text-base">
-                      {blogsByPopularity.headline}
-                    </p>
-                    <div className="flex mt-11">
-                      {imageUser && <img
-                        className="w-16 h-16 rounded-full mr-4"
-                        src={imageUser}
-                        alt="Avatar of Jonathan Reinink"
-                      />}
-                      <div className="text-sm">
-                        <p className="text-white font-bold m-0 text-lg">
-                          {blogsByPopularity.user}
-                        </p>
-                        <p className="text-base text-gray-500">
-                          {blogsByPopularity.file_path}
-                        </p>
+                    <div className="px-6 pb-4">
+                      <div className="py-3">
+                        <button
+                          id="imgCard"
+                          className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
+                        >
+                          {blogsByPopularity.category_name}
+                        </button>
+                      </div>
+                      <div className="font-bold text-xl mb-2">
+                        {blogsByPopularity.title}
+                      </div>
+                      <p className="text-gray-700 text-base">
+                        {blogsByPopularity.headline}
+                      </p>
+                      <div className="flex mt-11">
+                        {imageUser && (
+                          <img
+                            className="w-16 h-16 rounded-full mr-4"
+                            src={imageUser}
+                            alt="Avatar of Jonathan Reinink"
+                          />
+                        )}
+                        <div className="text-sm">
+                          <p className="text-white font-bold m-0 text-lg">
+                            {blogsByPopularity.user}
+                          </p>
+                          <p className="text-base text-gray-500">
+                            {blogsByPopularity.file_path}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </a>
             );
           })
