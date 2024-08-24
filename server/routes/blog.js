@@ -4,7 +4,8 @@ const authMiddleware = require("../middleware");
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
-const path = require("node:path")
+const path = require("node:path");
+const { log } = require("console");
 
 require("dotenv").config();
 const router = express.Router();
@@ -18,6 +19,8 @@ const storage = multer.diskStorage({
   },
 });
 
+router.use(bodyParser.json())
+
 const upload = multer({ 
   storage: storage,
   limits: {fileSize:1000000}
@@ -25,10 +28,93 @@ const upload = multer({
 
 router.use('/uploads', express.static("/home/aleortbas/Documents/imagesBlog"));
 
-router.route("/blogsHome").get(async (req, res) => {
+
+router.route("/imageJson").post(async (req,res) => {
+  const filePathPost = req.body;
+  try {
+    console.log("element",filePathPost.filePathPost);
+    const [response1, response2] = await Promise.all([
+      fetch(`http://localhost:5000/uploads/${filePathPost.filePathPost}`),
+      fetch(`http://localhost:5000/uploads/${filePathPost.filePathUser}`)
+    ])
+    if (!response1.ok) {
+      throw new Error('Network response was not ok')
+    } /* else {
+      const imageBlogUrl = await response1.url
+
+      res.status(200).json({
+        image_Blog: imageBlogUrl
+      })
+
+    } */
+  } catch (error) {
+    console.error("ERROR: ", error);
+    
+  }
+})
+
+router.route("/blogsHomeDate").get(async (req, res) => {
   try {
     const query =
       "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user, i.file_path FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id";
+    db.pool.query(query, async (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Error querying the database" });
+      }
+      if (result.rows.length === 1) {
+        const title = result.rows[2];
+      }
+
+      var blogs = result.rows;
+      const fetchedImageBlogs = []
+
+      for (let i = 0; i < blogs.length; i++) {
+        const elementBlogs = blogs[i];
+        const splitIdPost = elementBlogs.post_id
+        const splitPathPost = elementBlogs.file_path
+        const splitPathUser = elementBlogs.file_path_user.split("/")
+        filePathPost = splitPathPost
+        filePathUser = splitPathUser.pop()
+  
+        
+        const requestData = {
+          splitIdPost,
+          filePathPost,
+          filePathUser
+        };
+
+        /* console.log(requestData); */
+
+        try {
+          const response1 = fetch(`http://localhost:5000/imageJson`,{
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+          })
+          if (response1.ok) {
+            const data = await response1.json();
+            const image_blog = data.image_Blog
+  
+            fetchedImageBlogs.push(image_blog)
+          }
+        } catch (error) {
+          console.error("SU PUTA MADRE: ", error);
+        }
+      }
+      
+      res.status(200).json({ blog: result.rows });
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error " });
+  }
+});
+
+router.route("/blogsHome").get(async (req, res) => {
+  try {
+    const query =
+      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user, STRING_AGG(i.file_path, ' ') AS file_path FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id GROUP BY p.post_id, p.title, p.headline, p.body, u.user, u.file_path_user";
     db.pool.query(query, (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -56,27 +142,8 @@ router.get("/images/:filename", (req, res) => {
   });
 });
 
-router.route("/blogsHomeDate").get(async (req, res) => {
-  try {
-    const query =
-      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user FROM post as p INNER JOIN users as u ON u.user_id = p.user_id";
-    db.pool.query(query, (err, result) => {
-      if (err) {
-        return res.status(500).json({ message: "Error querying the database" });
-      }
-      if (result.rows.length === 1) {
-        const title = result.rows[2];
-      }
-      res.status(200).json({ blog: result.rows });
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error " });
-  }
-});
-
 router.route("/readBlog").get(async (req, res) => {
   const id_post = req.query.id_post;
-  console.log(id_post);
   try {
     const query =
       "SELECT b.post_id, b.title, b.headline, TO_CHAR(b.published_date, 'DD-MM-YYYY') as published_date, b.body, u.user, u.file_path_user, i.file_path FROM post as b INNER JOIN images as i ON i.id_blog = b.post_id INNER JOIN users as u ON u.user_id = b.user_id WHERE b.post_id = $1";
@@ -95,7 +162,6 @@ router.route("/readBlog").get(async (req, res) => {
 
 router.route("/profileData").get(async (req, res) => {
   const { user_id } = req.body;
-  console.log(user_id);
   try {
     const query =
       "SELECT p.title, p.headline, u.first_name || ' ' || u.last_name as username FROM post p INNER JOIN users u ON (u.user_id = p.user_id) WHERE u.user_id = '1'";
@@ -153,9 +219,7 @@ router.post("/uploadImage", upload.array("file"), async (req, res, next) => {
       path = prueba[i].path;
 
       const valuesImage = [originalname, size, path];
-      console.log(valuesImage);
           valuesImage.unshift(postId);
-          console.log("AQUI ", valuesImage);
           db.pool.query(queryImage, valuesImage, (error, results) => {
             if (error) {
               console.error("Error occurred Image: ", error);
