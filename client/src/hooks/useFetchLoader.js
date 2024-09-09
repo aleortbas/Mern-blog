@@ -49,7 +49,6 @@ const useFetchImages = (blogs) => {
     }
 
     setImageBlog(fetchedImageBlogs)
-    console.log("HOOK imageBlog",fetchedImageBlogs);
 
   }
   fetchData();

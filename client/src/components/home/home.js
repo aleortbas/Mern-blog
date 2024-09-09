@@ -17,6 +17,7 @@ function Home() {
       .then((response) => response.json()) //extracting JSON data
       .then((data) => {
         setBlogsByDate(data.blog);
+        setFilePathUser(data.images)
       })
       .catch((error) => console.log(error));
   }, []);
@@ -36,15 +37,12 @@ function Home() {
   }, []);
 
   const featureBlogs = blogsByDate.slice(0, 14);
-  console.log("blogsByDate", blogsByDate);
+  console.log("filePathUser", filePathUser);
   const popularityBlogs = blogsByPopularity.slice(0, 6);
 
   /* const { imageBlog, imageUser } = useFetchImages(blogsByDate); */
- /*  console.log("imageBlog : ", imageBlog); */
-
-  function handleClick() {
-    setPruebas(pruebas + 10);
-  }
+  const imageBlog = "";
+  const imageUser = "";
 
   return (
     <div className="container mt-20 m-auto">
@@ -60,7 +58,8 @@ function Home() {
 
       <div>
         {Array.isArray(blogsByDate) ? (
-          featureBlogs.map((blogsByDate) => {
+          featureBlogs.map((blogsByDate,index) => {
+            const imageUrl = filePathUser[index]
             return (
               <>
                 <a
@@ -70,16 +69,11 @@ function Home() {
                 >
                   <div className="px-8 py-8 md:w-3/6">
                     <div id="imgCard">
-                      {imageBlog.map((url, index) => {
-                        return (
+                     
                           <img
-                            key={index}
-                            src={url}
-                            alt={`Image ${index + 1}`}
+                            src={imageUrl}
                             className="my-custom-image-class" // Optional: Add any custom classes you want
                           />
-                        );
-                      })}
                     </div>
                   </div>
                   <div className="flex flex-col justify-between md:w-3/6 p-4 leading-normal">
