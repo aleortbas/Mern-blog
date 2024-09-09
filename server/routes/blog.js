@@ -26,30 +26,30 @@ const upload = multer({
   limits: {fileSize:1000000}
  });
 
-router.use('/uploads', express.static("/home/aleortbas/Documents/imagesBlog"));
+router.use('/uploads', express.static("/"));
 
 
 router.route("/imageJson").post(async (req,res) => {
   const filePathPost = req.body;
+  console.log("filePathPost", filePathPost);
+
   try {
-    console.log("element",filePathPost.filePathPost);
     const [response1, response2] = await Promise.all([
       fetch(`http://localhost:5000/uploads/${filePathPost.filePathPost}`),
       fetch(`http://localhost:5000/uploads/${filePathPost.filePathUser}`)
     ])
     if (!response1.ok) {
       throw new Error('Network response was not ok')
-    } /* else {
+    } else {
       const imageBlogUrl = await response1.url
 
       res.status(200).json({
         image_Blog: imageBlogUrl
       })
 
-    } */
+    }
   } catch (error) {
-    console.error("ERROR: ", error);
-    
+    res.status(500).json({ error: "Internal Server Error" });  
   }
 })
 
@@ -83,28 +83,31 @@ router.route("/blogsHomeDate").get(async (req, res) => {
           filePathUser
         };
 
-        /* console.log(requestData); */
+        console.log("requestData", requestData);
 
         try {
-          const response1 = fetch(`http://localhost:5000/imageJson`,{
+          const response1 = await fetch(`http://localhost:5000/imageJson`,{
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(requestData),
           })
+        console.log("hasta aqui", response1);
           if (response1.ok) {
             const data = await response1.json();
             const image_blog = data.image_Blog
+            console.log("QUE ES ESTO : ", image_blog);
   
             fetchedImageBlogs.push(image_blog)
           }
+          console.log(fetchedImageBlogs);
         } catch (error) {
           console.error("SU PUTA MADRE: ", error);
         }
       }
       
-      res.status(200).json({ blog: result.rows });
+      res.status(200).json({ blog: result.rows, images: fetchedImageBlogs });
     });
   } catch (error) {
     res.status(500).json({ message: "Internal server error " });
