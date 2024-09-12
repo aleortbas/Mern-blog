@@ -56,7 +56,7 @@ router.route("/imageJson").post(async (req,res) => {
 router.route("/blogsHomeDate").get(async (req, res) => {
   try {
     const query =
-      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user, i.file_path FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id";
+      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user, MIN(i.file_path) AS file_path, MIN(i.image_id) FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id  GROUP BY 1,2,3,5,6";
     db.pool.query(query, async (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -97,11 +97,11 @@ router.route("/blogsHomeDate").get(async (req, res) => {
           if (response1.ok) {
             const data = await response1.json();
             const image_blog = data.image_Blog
-            console.log("QUE ES ESTO : ", image_blog);
+/*             console.log("QUE ES ESTO : ", image_blog); */
   
             fetchedImageBlogs.push(image_blog)
           }
-          console.log(fetchedImageBlogs);
+/*           console.log(fetchedImageBlogs); */
         } catch (error) {
           console.error("SU PUTA MADRE: ", error);
         }
