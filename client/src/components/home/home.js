@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import useFetchImages from "/home/aleortbas/Documents/Mern-blog/client/src/hooks/useFetchLoader";
 
 function Home() {
-  const [blogsByDate, setBlogsByDate] = useState([]);
-  const [blogsByPopularity, setBlogsByPopularity] = useState([]);
-  const [filePathUser, setFilePathUser] = useState("");
+  const [featureBlogs, setFeatureBlogs] = useState([]);
+  const [latestBlogs, setLatestBlogs] = useState([]);
+  const [filePathUserFeature, setfilePathUserFeature] = useState("");
+  const [filePathUserLatest, setFilePathUserLatest] = useState("");
+  const [userImage, setUserImage] = useState("");
   const [pruebas, setPruebas] = useState(10);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/blogsHomeDate`, {
+    fetch(`http://localhost:5000/featureBlogs`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -16,14 +18,14 @@ function Home() {
     })
       .then((response) => response.json()) //extracting JSON data
       .then((data) => {
-        setBlogsByDate(data.blog);
-        setFilePathUser(data.images)
+        setFeatureBlogs(data.blog);
+        setfilePathUserFeature(data.images)
       })
       .catch((error) => console.log(error));
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/blogsHome`, {
+    fetch(`http://localhost:5000/latestBlogs`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -31,16 +33,18 @@ function Home() {
     })
       .then((response) => response.json()) //extracting JSON data
       .then((data) => {
-        setBlogsByPopularity(data.blog);
+        setLatestBlogs(data.blog);
+        setFilePathUserLatest(data.images)
+        setUserImage()
       })
       .catch((error) => console.log(error));
   }, []);
 
-  const featureBlogs = blogsByDate.slice(0, 14);
-  console.log("filePathUser", filePathUser);
-  const popularityBlogs = blogsByPopularity.slice(0, 6);
+  const featureBlogsAmount = featureBlogs.slice(0, 14);
+  console.log("filePathUserLatest", filePathUserLatest);
+  const popularityBlogs = latestBlogs.slice(0, 6);
 
-  /* const { imageBlog, imageUser } = useFetchImages(blogsByDate); */
+  /* const { imageBlog, imageUser } = useFetchImages(featureBlogs); */
   const imageBlog = "";
   const imageUser = "";
 
@@ -57,13 +61,13 @@ function Home() {
       {/** feature blog */}
 
       <div>
-        {Array.isArray(blogsByDate) ? (
-          featureBlogs.map((blogsByDate,index) => {
-            const imageUrl = filePathUser[index]
+        {Array.isArray(featureBlogs) ? (
+          featureBlogsAmount.map((featureBlogs,index) => {
+            const imageUrl = filePathUserFeature[index]
             return (
               <>
                 <a
-                  href={`/postBlog/${blogsByDate.post_id}`}
+                  href={`/postBlog/${featureBlogs.post_id}`}
                   id="homeCard"
                   className="flex flex-col items-center bg-[#101828] rounded-xl no-underline my-16 md:flex-row "
                 >
@@ -72,7 +76,7 @@ function Home() {
                      
                           <img
                             src={imageUrl}
-                            className="my-custom-image-class" // Optional: Add any custom classes you want
+                            className="my-custom-image-class"
                           />
                     </div>
                   </div>
@@ -82,14 +86,14 @@ function Home() {
                         id="loginButton"
                         className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
                       >
-                        {blogsByDate.category_name}
+                        {featureBlogs.category_name}
                       </button>
                     </div>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                      {blogsByDate.title}
+                      {featureBlogs.title}
                     </h5>
                     <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                      {blogsByDate.headline}
+                      {featureBlogs.headline}
                     </p>
                   </div>
                 </a>
@@ -110,21 +114,20 @@ function Home() {
       </div>
 
       <div className="md:grid md:grid-cols-2 gap-14 pt-16">
-        {Array.isArray(blogsByPopularity) ? (
-          popularityBlogs.map((blogsByPopularity) => {
+        {Array.isArray(latestBlogs) ? (
+          popularityBlogs.map((latestBlogs,index) => {
+            const imageUrl = filePathUserLatest[index]
             return (
-              <a href={`/postBlog/${blogsByDate.id_post}`}>
+              <a href={`/postBlog/${featureBlogs.id_post}`}>
                 <div className="mt-7">
                   <div id="homeCard" className="rounded-xl">
                     <div className="px-8 py-8">
                       <div id="imgCard">
-                        {imageBlog && (
                           <img
                             className="w-full md:h-auto rounded-2xl"
-                            src={imageBlog}
+                            src={imageUrl}
                             alt=""
                           />
-                        )}
                       </div>
                     </div>
                     <div className="px-6 pb-4">
@@ -133,29 +136,27 @@ function Home() {
                           id="imgCard"
                           className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
                         >
-                          {blogsByPopularity.category_name}
+                          {latestBlogs.category_name}
                         </button>
                       </div>
                       <div className="font-bold text-xl mb-2">
-                        {blogsByPopularity.title}
+                        {latestBlogs.title}
                       </div>
                       <p className="text-gray-700 text-base">
-                        {blogsByPopularity.headline}
+                        {latestBlogs.headline}
                       </p>
                       <div className="flex mt-11">
-                        {imageUser && (
                           <img
                             className="w-16 h-16 rounded-full mr-4"
-                            src={imageUser}
+                            src={imageUrl}
                             alt="Avatar of Jonathan Reinink"
                           />
-                        )}
                         <div className="text-sm">
                           <p className="text-white font-bold m-0 text-lg">
-                            {blogsByPopularity.user}
+                            {latestBlogs.user}
                           </p>
                           <p className="text-base text-gray-500">
-                            {blogsByPopularity.file_path}
+                            {latestBlogs.file_path}
                           </p>
                         </div>
                       </div>

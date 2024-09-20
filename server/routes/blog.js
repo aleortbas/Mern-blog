@@ -5,6 +5,7 @@ const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("node:path");
+const { imageJson } = require('../utils/imageService')
 const { log } = require("console");
 
 require("dotenv").config();
@@ -31,7 +32,6 @@ router.use('/uploads', express.static("/"));
 
 router.route("/imageJson").post(async (req,res) => {
   const filePathPost = req.body;
-  console.log("filePathPost", filePathPost);
 
   try {
     const [response1, response2] = await Promise.all([
@@ -53,10 +53,10 @@ router.route("/imageJson").post(async (req,res) => {
   }
 })
 
-router.route("/blogsHomeDate").get(async (req, res) => {
+router.route("/featureBlogs").get(async (req, res) => {
   try {
     const query =
-      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user, i.file_path FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id";
+      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user, MIN(i.file_path) AS file_path, MIN(i.image_id) FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id  GROUP BY 1,2,3,5,6";
     db.pool.query(query, async (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -66,46 +66,7 @@ router.route("/blogsHomeDate").get(async (req, res) => {
       }
 
       var blogs = result.rows;
-      const fetchedImageBlogs = []
-
-      for (let i = 0; i < blogs.length; i++) {
-        const elementBlogs = blogs[i];
-        const splitIdPost = elementBlogs.post_id
-        const splitPathPost = elementBlogs.file_path
-        const splitPathUser = elementBlogs.file_path_user.split("/")
-        filePathPost = splitPathPost
-        filePathUser = splitPathUser.pop()
-  
-        
-        const requestData = {
-          splitIdPost,
-          filePathPost,
-          filePathUser
-        };
-
-        console.log("requestData", requestData);
-
-        try {
-          const response1 = await fetch(`http://localhost:5000/imageJson`,{
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-          })
-        console.log("hasta aqui", response1);
-          if (response1.ok) {
-            const data = await response1.json();
-            const image_blog = data.image_Blog
-            console.log("QUE ES ESTO : ", image_blog);
-  
-            fetchedImageBlogs.push(image_blog)
-          }
-          console.log(fetchedImageBlogs);
-        } catch (error) {
-          console.error("SU PUTA MADRE: ", error);
-        }
-      }
+      const fetchedImageBlogs = await imageJson(blogs);
       
       res.status(200).json({ blog: result.rows, images: fetchedImageBlogs });
     });
@@ -114,10 +75,10 @@ router.route("/blogsHomeDate").get(async (req, res) => {
   }
 });
 
-router.route("/blogsHome").get(async (req, res) => {
+router.route("/latestBlogs").get(async (req, res) => {
   try {
     const query =
-      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user, STRING_AGG(i.file_path, ' ') AS file_path FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id GROUP BY p.post_id, p.title, p.headline, p.body, u.user, u.file_path_user";
+      "SELECT p.post_id, p.title, p.headline, p.body, u.user, u.file_path_user, i.file_path AS file_path FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id ORDER BY p.published_date DESC LIMIT 4";
     db.pool.query(query, (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -230,7 +191,7 @@ router.post("/uploadImage", upload.array("file"), async (req, res, next) => {
               console.log("Post and Image inserted succesfully");
             }
           });
-
+ 
     }
     res.status(200).json({ message: "image data added", id: "id_post" });
   } catch (error) {
