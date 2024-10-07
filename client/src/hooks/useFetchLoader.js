@@ -36,12 +36,14 @@ const useFetchImages = (blogs) => {
           },
           body: JSON.stringify(requestData),
         })
+        console.log(response1);
         if (response1.ok) {
           const data = await response1.json();
           console.log(data);
           const image_blog = data.image_Blog
 
           fetchedImageBlogs.push(image_blog)
+
         }
       } catch (error) {
         console.error("SU PUTA MADRE: ", error);
