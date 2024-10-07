@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 function PostBlog(props) {
   const {post_id} = useParams()
   const [blogs, setBlogs] = useState([]);
-  const [imageBlog, setImageBlog] = useState([])
+  const [imageBlog, setImageBlog] = useState("")
   const [idPost, setIdPost] = useState(null);
 
  /*  console.log("post_id ",post_id); */
@@ -32,9 +32,13 @@ function PostBlog(props) {
       .then((data) => {
         setBlogs(data.blog);
         setImageBlog(data.images)
+        console.log("AQUI ", data.images);
       })
       .catch((error) => console.log(error));
   }, []);
+
+  const imageBlogUrlArray = Object(imageBlog[0])
+  console.log("imageBlogUrlArray ",imageBlogUrlArray);
 
   return (
     <>
@@ -127,7 +131,7 @@ function PostBlog(props) {
             <div className="rounded-xl" id="imgCard">
               {imageBlog && <img
                 className="w-full md:h-auto rounded-2xl"
-                src={imageBlog}
+                src={imageBlog[0][0]}
                 alt=""
               />}
             </div>
@@ -135,11 +139,11 @@ function PostBlog(props) {
 
           <div className="mt-24 flex justify-center m-auto w-2/3">
             <div className="text-white">
-              {Array.isArray(blogs) && imageBlog.length >= 1 ? (
+              {Array.isArray(blogs) && Object.keys(imageBlogUrlArray).length > 1 ? (
                 blogs.map((blog) => {
-                  console.log("imageBlog.length",imageBlog.length);
-                  console.log("blog",imageBlog);
-                  const paragraphs = blog.body.split("\r\n");
+                  console.log("ENTRA AQUI", Object.keys(imageBlog).length);
+                  const paragraphs = blog.body.split(/\r?\n/);
+                  console.log("paragraphs ", paragraphs);
                   return (
                     <div key={blog.id}>
                       {paragraphs.map((paragraph, index) => (
@@ -148,8 +152,8 @@ function PostBlog(props) {
                             {paragraph}
                           </p>
                           {imageBlog &&<img
-                            className="w-full md:h-auto mb-5 rounded-2xl"
-                            src={imageBlog}
+                            className="w-auto md:h-auto mb-5 rounded-2xl"
+                            src={imageBlog[0][index]}
                             alt=""
                           />}
                         </>
