@@ -41,8 +41,9 @@ function Home() {
   }, []);
 
   const featureBlogsAmount = featureBlogs.slice(0, 14);
-  console.log("filePathUserLatest", filePathUserLatest);
   const popularityBlogs = latestBlogs.slice(0, 6);
+
+  let imageUrl;
 
   /* const { imageBlog, imageUser } = useFetchImages(featureBlogs); */
   const imageBlog = "";
@@ -63,7 +64,12 @@ function Home() {
       <div>
         {Array.isArray(featureBlogs) ? (
           featureBlogsAmount.map((featureBlogs,index) => {
-            const imageUrl = filePathUserFeature[index]
+            imageUrl = filePathUserFeature[index]
+            let element;
+            for (let i = 0; i < filePathUserFeature.length; i++) {
+              element = filePathUserFeature[index][0];
+            }
+            
             return (
               <>
                 <a
@@ -75,7 +81,7 @@ function Home() {
                     <div id="imgCard">
                      
                           <img
-                            src={imageUrl}
+                            src={element}
                             className="my-custom-image-class"
                           />
                     </div>
