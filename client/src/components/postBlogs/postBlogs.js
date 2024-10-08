@@ -13,9 +13,9 @@ import { useParams } from "react-router-dom";
 function PostBlog(props) {
   const {post_id} = useParams()
   const [blogs, setBlogs] = useState([]);
+  const [imageBlog, setImageBlog] = useState("")
   const [idPost, setIdPost] = useState(null);
 
- /*  console.log("post_id ",post_id); */
 
   useEffect(() => {
     const url = window.location.href;
@@ -29,13 +29,15 @@ function PostBlog(props) {
     })
       .then((response) => response.json()) //extracting JSON data
       .then((data) => {
-        /* console.log(data); */
         setBlogs(data.blog);
+        setImageBlog(data.images)
       })
       .catch((error) => console.log(error));
   }, []);
-  const {imageUser, imageBlog} = useFetchImages(blogs);
-  /* console.log("IMAGE",imageBlog); */
+
+  let imageBlogUrlArray = Object(imageBlog[0])
+
+
   return (
     <>
       <div className=" flex justify-center mt-36">
@@ -55,11 +57,11 @@ function PostBlog(props) {
 
           <div className="flex mt-5 m-auto justify-between w-2/3">
             <div className="flex">
-            {imageUser && <img
+            {/* {imageUser && <img
                         className="w-16 h-16 rounded-full mr-4"
                         src={imageUser}
                         alt="Avatar of Jonathan Reinink"
-                      />}
+                      />} */}
               <div className="text-sm">
                 {Array.isArray(blogs) ? (
                   blogs.map((blog) => {
@@ -127,20 +129,22 @@ function PostBlog(props) {
             <div className="rounded-xl" id="imgCard">
               {imageBlog && <img
                 className="w-full md:h-auto rounded-2xl"
-                src={imageBlog}
+                src={imageBlog[0][0]}
                 alt=""
               />}
             </div>
           </div>
 
-          <div className="mt-24 flex justify-center m-auto w-2/3">
+          <div className="mt-24 flex justify-center place-items-center m-auto w-2/3">
             <div className="text-white">
-              {Array.isArray(blogs) ? (
+              {Array.isArray(blogs) && Object.keys(imageBlogUrlArray).length > 1 ? (
                 blogs.map((blog) => {
-                  // Split the blog body text into paragraphs based on line breaks
-                  const paragraphs = blog.body.split("\n\n");
-
-                  // Map over the paragraphs and return a <p> element for each
+                  let paragraphs;
+                  if (blog.body.split(/\r?\n/) === true) {
+                    paragraphs = blog.body.split(/\r?\n/).filter(paragraph => paragraph.trim() !== "")
+                  } else {
+                    paragraphs = blog.body.split(/(.{250}[^\s]*)\s/).filter(paragraph => paragraph.trim() !== "");
+                  }
                   return (
                     <div key={blog.id}>
                       {paragraphs.map((paragraph, index) => (
@@ -149,8 +153,8 @@ function PostBlog(props) {
                             {paragraph}
                           </p>
                           {imageBlog &&<img
-                            className="w-full md:h-auto mb-5 rounded-2xl"
-                            src={imageBlog}
+                            className="w-auto md:h-auto mb-5 rounded-2xl m-auto"
+                            src={imageBlog[0][index]}
                             alt=""
                           />}
                         </>
@@ -159,14 +163,27 @@ function PostBlog(props) {
                   );
                 })
               ) : (
-                <h2>nada</h2>
+                blogs.map((blog) => {
+                  const paragraphs = blog.body.split("\r\n");
+                  return (
+                    <div key={blog.id}>
+                      {paragraphs.map((paragraph, index) => (
+                        <>
+                          <p className="mb-5" key={index}>
+                            {paragraph}
+                          </p>
+                        </>
+                      ))}
+                    </div>
+                  );
+                })
               )}
             </div>
           </div>
-          <div className="mt-24 flex justify-center m-auto w-2/3">
+          <div className="mt-24 flex m-auto w-2/3">
             <div className="text-white">
               <h3>Share this point</h3>
-              <div className="flex items-end">
+              <div className="flex items-end mt-8 mb-8">
                 <button
                   id="homeCard"
                   className="bg-[#101828] text-white text-center font-semibold  h-11  w-11 mr-2 rounded-full  cursor-pointer"
@@ -206,26 +223,6 @@ function PostBlog(props) {
                     size="sm"
                     icon={faFacebook}
                   />
-                </button>
-              </div>
-              <div className="flex items-end">
-                <button
-                  id="imgCard"
-                  className="bg-[#101828] text-white text-center font-semibold  h-12  w-36 mr-2 p-0 rounded-3xl  cursor-pointer"
-                >
-                  <p>tag blog</p>
-                </button>
-                <button
-                  id="imgCard"
-                  className="bg-[#101828] text-white text-center font-semibold  h-12 w-36 mr-2 p-0 rounded-3xl  cursor-pointer"
-                >
-                  <p>tag blog</p>
-                </button>
-                <button
-                  id="imgCard"
-                  className="bg-[#101828] text-white text-center font-semibold  h-12  w-36 mr-2 p-0 rounded-3xl  cursor-pointer"
-                >
-                  <p>tag blog</p>
                 </button>
               </div>
             </div>

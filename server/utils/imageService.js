@@ -30,6 +30,7 @@ async function imageJson(blogs) {
         const data = await response1.json();
         const image_blog = data.image_Blog;
 
+        console.log("DATA", data);
         fetchedImageBlogs.push(image_blog);
       }
     } catch (error) {
