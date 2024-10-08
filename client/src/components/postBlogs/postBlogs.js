@@ -144,7 +144,6 @@ function PostBlog(props) {
                     paragraphs = blog.body.split(/\r?\n/).filter(paragraph => paragraph.trim() !== "")
                   } else {
                     paragraphs = blog.body.split(/(.{250}[^\s]*)\s/).filter(paragraph => paragraph.trim() !== "");
-                    console.log("pa ", paragraphs);
                   }
                   return (
                     <div key={blog.id}>
@@ -166,7 +165,6 @@ function PostBlog(props) {
               ) : (
                 blogs.map((blog) => {
                   const paragraphs = blog.body.split("\r\n");
-                  console.log("una imagen");
                   return (
                     <div key={blog.id}>
                       {paragraphs.map((paragraph, index) => (
