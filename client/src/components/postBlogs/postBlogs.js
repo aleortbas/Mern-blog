@@ -16,7 +16,6 @@ function PostBlog(props) {
   const [imageBlog, setImageBlog] = useState("")
   const [idPost, setIdPost] = useState(null);
 
- /*  console.log("post_id ",post_id); */
 
   useEffect(() => {
     const url = window.location.href;
@@ -32,13 +31,12 @@ function PostBlog(props) {
       .then((data) => {
         setBlogs(data.blog);
         setImageBlog(data.images)
-        console.log("AQUI ", data.images);
       })
       .catch((error) => console.log(error));
   }, []);
 
-  const imageBlogUrlArray = Object(imageBlog[0])
-  console.log("imageBlogUrlArray ",imageBlogUrlArray);
+  let imageBlogUrlArray = Object(imageBlog[0])
+
 
   return (
     <>
@@ -137,13 +135,17 @@ function PostBlog(props) {
             </div>
           </div>
 
-          <div className="mt-24 flex justify-center m-auto w-2/3">
+          <div className="mt-24 flex justify-center place-items-center m-auto w-2/3">
             <div className="text-white">
               {Array.isArray(blogs) && Object.keys(imageBlogUrlArray).length > 1 ? (
                 blogs.map((blog) => {
-                  console.log("ENTRA AQUI", Object.keys(imageBlog).length);
-                  const paragraphs = blog.body.split(/\r?\n/);
-                  console.log("paragraphs ", paragraphs);
+                  let paragraphs;
+                  if (blog.body.split(/\r?\n/) === true) {
+                    paragraphs = blog.body.split(/\r?\n/).filter(paragraph => paragraph.trim() !== "")
+                  } else {
+                    paragraphs = blog.body.split(/(.{250}[^\s]*)\s/).filter(paragraph => paragraph.trim() !== "");
+                    console.log("pa ", paragraphs);
+                  }
                   return (
                     <div key={blog.id}>
                       {paragraphs.map((paragraph, index) => (
@@ -152,7 +154,7 @@ function PostBlog(props) {
                             {paragraph}
                           </p>
                           {imageBlog &&<img
-                            className="w-auto md:h-auto mb-5 rounded-2xl"
+                            className="w-auto md:h-auto mb-5 rounded-2xl m-auto"
                             src={imageBlog[0][index]}
                             alt=""
                           />}
@@ -164,6 +166,7 @@ function PostBlog(props) {
               ) : (
                 blogs.map((blog) => {
                   const paragraphs = blog.body.split("\r\n");
+                  console.log("una imagen");
                   return (
                     <div key={blog.id}>
                       {paragraphs.map((paragraph, index) => (
@@ -179,10 +182,10 @@ function PostBlog(props) {
               )}
             </div>
           </div>
-          <div className="mt-24 flex justify-center m-auto w-2/3">
+          <div className="mt-24 flex m-auto w-2/3">
             <div className="text-white">
               <h3>Share this point</h3>
-              <div className="flex items-end">
+              <div className="flex items-end mt-8 mb-8">
                 <button
                   id="homeCard"
                   className="bg-[#101828] text-white text-center font-semibold  h-11  w-11 mr-2 rounded-full  cursor-pointer"
@@ -222,26 +225,6 @@ function PostBlog(props) {
                     size="sm"
                     icon={faFacebook}
                   />
-                </button>
-              </div>
-              <div className="flex items-end">
-                <button
-                  id="imgCard"
-                  className="bg-[#101828] text-white text-center font-semibold  h-12  w-36 mr-2 p-0 rounded-3xl  cursor-pointer"
-                >
-                  <p>tag blog</p>
-                </button>
-                <button
-                  id="imgCard"
-                  className="bg-[#101828] text-white text-center font-semibold  h-12 w-36 mr-2 p-0 rounded-3xl  cursor-pointer"
-                >
-                  <p>tag blog</p>
-                </button>
-                <button
-                  id="imgCard"
-                  className="bg-[#101828] text-white text-center font-semibold  h-12  w-36 mr-2 p-0 rounded-3xl  cursor-pointer"
-                >
-                  <p>tag blog</p>
                 </button>
               </div>
             </div>
