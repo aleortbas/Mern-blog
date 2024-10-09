@@ -65,6 +65,7 @@ function Home() {
         {Array.isArray(featureBlogs) ? (
           featureBlogsAmount.map((featureBlogs,index) => {
             imageUrl = filePathUserFeature[index]
+            console.log(featureBlogs);
             let element;
             for (let i = 0; i < filePathUserFeature.length; i++) {
               element = filePathUserFeature[index][0];
@@ -77,12 +78,12 @@ function Home() {
                   id="homeCard"
                   className="flex flex-col items-center bg-[#101828] rounded-xl no-underline my-16 md:flex-row "
                 >
-                  <div className="px-8 py-8 md:w-3/6">
+                  <div className="px-8 py-8 md:min-w-min max-w-lg h-auto">
                     <div id="imgCard">
                      
                           <img
                             src={element}
-                            className="my-custom-image-class"
+                            className="w-auto h-auto"
                           />
                     </div>
                   </div>
@@ -92,7 +93,7 @@ function Home() {
                         id="loginButton"
                         className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
                       >
-                        {featureBlogs.category_name}
+                        {featureBlogs.name}
                       </button>
                     </div>
                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -122,16 +123,19 @@ function Home() {
       <div className="md:grid md:grid-cols-2 gap-14 pt-16">
         {Array.isArray(latestBlogs) ? (
           popularityBlogs.map((latestBlogs,index) => {
-            const imageUrl = filePathUserLatest[index]
+            let element;
+            for (let i = 0; i < filePathUserLatest.length; i++) {
+              element = filePathUserLatest[index][0];
+            }
             return (
-              <a href={`/postBlog/${featureBlogs.id_post}`}>
+              <a href={`/postBlog/${latestBlogs.post_id}`}>
                 <div className="mt-7">
                   <div id="homeCard" className="rounded-xl">
-                    <div className="px-8 py-8">
+                    <div className="px-8 py-8 w-fit m-auto">
                       <div id="imgCard">
                           <img
-                            className="w-full md:h-auto rounded-2xl"
-                            src={imageUrl}
+                            className="w-auto md:max-h-max rounded-2xl"
+                            src={element}
                             alt=""
                           />
                       </div>
@@ -139,11 +143,11 @@ function Home() {
                     <div className="px-6 pb-4">
                       <div className="py-3">
                         <button
-                          id="imgCard"
-                          className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
-                        >
-                          {latestBlogs.category_name}
-                        </button>
+                        id="loginButton"
+                        className="bg-[#101828] text-white font-semibold px-4 py-1 h-10 w-auto rounded-[50px] cursor-pointer"
+                      >
+                        {latestBlogs.name}
+                      </button>
                       </div>
                       <div className="font-bold text-xl mb-2">
                         {latestBlogs.title}
@@ -154,8 +158,7 @@ function Home() {
                       <div className="flex mt-11">
                           <img
                             className="w-16 h-16 rounded-full mr-4"
-                            src={imageUrl}
-                            alt="Avatar of Jonathan Reinink"
+                            src={element}
                           />
                         <div className="text-sm">
                           <p className="text-white font-bold m-0 text-lg">
