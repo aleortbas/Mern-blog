@@ -76,7 +76,7 @@ router.route("/imageJson").post(async (req, res) => {
 router.route("/featureBlogs").get(async (req, res) => {
   try {
     const query =
-      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user, array_agg(i.file_path) AS file_path, MIN(i.image_id) FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id  GROUP BY 1,2,3,5,6";
+      "SELECT p.post_id,p.title,p.headline,p.body, u.user, u.file_path_user, array_agg(i.file_path) AS file_path, MIN(i.image_id), c.name FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id INNER JOIN categories c ON c.category_id = p.category_id GROUP BY 1,2,3,5,6,9";
     db.pool.query(query, async (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
@@ -99,7 +99,7 @@ router.route("/featureBlogs").get(async (req, res) => {
 router.route("/latestBlogs").get(async (req, res) => {
   try {
     const query =
-      "SELECT p.post_id, p.title, p.headline, p.body, u.user, u.file_path_user, array_agg(i.file_path) AS file_path FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id GROUP BY 1,2,3,4,5,6  LIMIT 4";
+      "SELECT p.post_id, p.title, p.headline, p.body, u.user, u.file_path_user, array_agg(i.file_path) AS file_path, c.name FROM post as p INNER JOIN users as u ON u.user_id = p.user_id INNER JOIN images as i ON i.id_blog = p.post_id INNER JOIN categories c ON c.category_id = p.category_id GROUP BY 1,2,3,4,5,6,8  LIMIT 4";
     db.pool.query(query, async (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Error querying the database" });
